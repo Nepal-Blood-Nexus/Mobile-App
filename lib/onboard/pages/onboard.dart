@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nepal_blood_nexus/utils/colours.dart';
+import 'package:nepal_blood_nexus/utils/routes.dart';
 import 'package:onboarding/onboarding.dart';
 
 class OnboardPage extends StatefulWidget {
@@ -150,7 +152,7 @@ class _OnboardPageState extends State<OnboardPage> {
           child: Text(
             'Next',
             style: TextStyle(
-              color: Colors.red,
+              color: Colours.mainColor,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -162,9 +164,14 @@ class _OnboardPageState extends State<OnboardPage> {
   Material get _signupButton {
     return Material(
       borderRadius: const BorderRadius.all(Radius.circular(2)),
-      color: Colors.red,
+      color: Colours.mainColor,
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            Routes.login,
+          );
+        },
         child: const Padding(
           padding: EdgeInsets.all(10),
           child: Text(
@@ -206,8 +213,8 @@ class _OnboardPageState extends State<OnboardPage> {
                               netDragPercent: dragDistance,
                               pagesLength: pagesLength,
                               indicator: Indicator(
-                                closedIndicator:
-                                    const ClosedIndicator(color: Colors.red),
+                                closedIndicator: const ClosedIndicator(
+                                    color: Colours.mainColor),
                                 indicatorDesign: IndicatorDesign.polygon(
                                   polygonDesign: PolygonDesign(
                                       polygon: DesignType.polygon_circle,

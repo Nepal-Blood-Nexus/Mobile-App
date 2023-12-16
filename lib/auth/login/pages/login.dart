@@ -9,8 +9,8 @@ import 'package:nepal_blood_nexus/widgets/text_input.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class RegisterPage extends StatelessWidget {
-  RegisterPage({super.key});
+class LoginPage extends StatelessWidget {
+  LoginPage({super.key});
 
   void displayDialog(context, title, text) => showDialog(
         context: context,
@@ -32,11 +32,12 @@ class RegisterPage extends StatelessWidget {
         context: context,
         builder: (context) => const AlertDialog(
           content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               CircularProgressIndicator(
                 color: Colours.mainColor,
               ),
-              Text("Loading")
+              Text("Loading...")
             ],
           ),
         ),
@@ -50,27 +51,21 @@ class RegisterPage extends StatelessWidget {
   final storage = const FlutterSecureStorage();
 
   Future attemptSignUp(
-    String fullname,
     String email,
     String phone,
     String password,
   ) async {
-    var url = Uri.https('nbn-server.onrender.com', 'api/auth');
-    var res = await http.post(url, body: {
-      "fullname": fullname,
-      "email": email,
-      "phone": phone,
-      "password": password
-    });
+    var url = Uri.https('nbn-server.onrender.com', 'api/auth/login');
+    var res = await http.post(url,
+        body: {"email": email, "phone": phone, "password": password});
     return res.body;
   }
 
   Future _register() async {
-    var fullname = fullnameController.text;
     var email = emailController.text;
     var password = passwordController.text;
     var phone = phoneController.text;
-    var res = await attemptSignUp(fullname, email, phone, password);
+    var res = await attemptSignUp(email, phone, password);
     return res;
   }
 
@@ -88,18 +83,11 @@ class RegisterPage extends StatelessWidget {
                 height: 7,
               ),
               const Text(
-                "Register your account",
+                "Login",
                 style:
                     TextStyle(fontWeight: FontWeight.w600, letterSpacing: 1.5),
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              // full name
-              CustomTextInput(
-                hintText: "Your Full Name",
-                controller: fullnameController,
-              ),
+
               const SizedBox(
                 height: 10,
               ),
@@ -117,7 +105,7 @@ class RegisterPage extends StatelessWidget {
                 textInputType: TextInputType.phone,
               ),
               const SizedBox(
-                height: 6,
+                height: 7,
               ),
               CustomTextInput(
                 hintText: "password",
@@ -126,7 +114,7 @@ class RegisterPage extends StatelessWidget {
               ),
 
               ButtonV1(
-                text: "Register",
+                text: "Login",
                 onTap: () {
                   showLoading(context);
                   _register().then((value) {
@@ -135,28 +123,29 @@ class RegisterPage extends StatelessWidget {
                       displayDialog(context, "Failed", response["error"]);
                     } else {
                       User user = User.fromJson(response["user"]);
-                      String usr = jsonEncode(user);
+
                       storage.write(key: "token", value: response["token"]);
-                      storage.write(key: "user", value: usr);
+                      storage.write(
+                          key: "user", value: jsonEncode(response["user"]));
 
                       Navigator.pushNamedAndRemoveUntil(
                         context,
                         Routes.home,
                         (routes) => false,
-                        arguments: {"token": response["token"], "user": usr},
+                        arguments: {"token": response["token"], "user": user},
                       );
                     }
                   });
                 },
               ),
 
-              const Text("Already Registerd?"),
+              const Text("Dont Have an account?"),
               TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, Routes.login);
+                    Navigator.pushNamed(context, Routes.register);
                   },
                   child: const Text(
-                    "Login",
+                    "Register",
                     style: TextStyle(color: Colours.mainColor),
                   )),
 

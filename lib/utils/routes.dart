@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:nepal_blood_nexus/auth/login/pages/login.dart';
 import 'package:nepal_blood_nexus/auth/register/pages/register.dart';
 import 'package:nepal_blood_nexus/homepage/pages/homepage.dart';
+import 'package:nepal_blood_nexus/more/more_option.dart';
 import 'package:nepal_blood_nexus/onboard/pages/onboard.dart';
-import 'package:nepal_blood_nexus/utils/models/user.dart';
-import 'package:page_transition/page_transition.dart';
 
 class Routes {
   static const String welcome = 'welcome';
   static const String login = 'login';
   static const String home = 'home';
   static const String profile = 'profile';
+  static const String register = 'register';
+  static const String more = 'more';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -17,8 +19,10 @@ class Routes {
         return MaterialPageRoute(
           builder: (context) => const OnboardPage(),
         );
-      case login:
+      case register:
         return MaterialPageRoute(builder: (context) => RegisterPage());
+      case login:
+        return MaterialPageRoute(builder: (context) => LoginPage());
       // case verification:
       //   final Map args = settings.arguments as Map;
       //   return MaterialPageRoute(
@@ -41,7 +45,7 @@ class Routes {
       // case contact:
       //   return MaterialPageRoute(builder: (context) => const ContactPage());
       // case chat:
-      //   UserModel user = settings.arguments as UserModel;
+      //   UserModel user = settings.arguments as UserModel;builder
       //   return MaterialPageRoute(builder: (context) => ChatPage(user: user));
       // case profile:
       //   UserModel user = settings.arguments as UserModel;
@@ -50,6 +54,9 @@ class Routes {
       //     type: PageTransitionType.fade,
       //     duration: const Duration(milliseconds: 500),
       //   );
+
+      case more:
+        return MaterialPageRoute(builder: (context) => MoreOptionPage());
 
       default:
         return MaterialPageRoute(

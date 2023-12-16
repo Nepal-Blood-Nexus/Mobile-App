@@ -20,7 +20,7 @@ class _OnboardPageState extends State<OnboardPage> {
           Expanded(
             child: Image.asset(
               "assets/images/1.png",
-              color: Colors.black,
+              color: const Color.fromARGB(255, 247, 106, 106),
             ),
           ),
           Expanded(

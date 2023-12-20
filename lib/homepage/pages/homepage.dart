@@ -22,22 +22,6 @@ class _HomePageState extends State<HomePage> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.amber);
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    ProfileScreen(),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: Home',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 4: Requests',
-      style: optionStyle,
-    ),
-  ];
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -46,6 +30,27 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    late List<Widget> _widgetOptions = <Widget>[
+      const Text(
+        'Index 1: Business',
+        style: optionStyle,
+      ),
+      const Text(
+        'Index 2: Home',
+        style: optionStyle,
+      ),
+      ProfileScreen(
+        user: widget.user as User,
+      ),
+      const Text(
+        'Index 4: Requests',
+        style: optionStyle,
+      ),
+      const Text(
+        'Index 4: Requests',
+        style: optionStyle,
+      ),
+    ];
     return Scaffold(
       backgroundColor: Colours.white,
       bottomNavigationBar: CurvedNavigationBar(
@@ -55,12 +60,9 @@ class _HomePageState extends State<HomePage> {
         animationDuration: const Duration(milliseconds: 300),
         height: 50,
         items: const <Widget>[
-          Icon(
-            Icons.face_4,
-            color: Colours.white,
-          ),
           Icon(Icons.insights, color: Colours.white),
           Icon(Icons.school, color: Colours.white),
+          Icon(Icons.face_4, color: Colours.white),
           Icon(Icons.school, color: Colours.white),
           Icon(Icons.school, color: Colours.white),
         ],
@@ -68,35 +70,32 @@ class _HomePageState extends State<HomePage> {
       ),
       body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Good Morning"),
-                        Text(
-                          "${widget.user?.fullname}",
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        widget.user?.profile == null
-                            ? const Text("Set up your profile")
-                            : const Row(),
-                      ]),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  child: IconButton(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(children: [
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Good Morning"),
+                          Text(
+                            "${widget.user?.fullname}",
+                            style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                                color: Colours.mainColor),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                        ]),
+                  ]),
+                  IconButton(
                     onPressed: () {
                       // storage.delete(key: "token");
                       // storage.delete(key: "user");
@@ -109,8 +108,8 @@ class _HomePageState extends State<HomePage> {
                     tooltip: "More",
                     color: const Color.fromARGB(255, 242, 22, 22),
                   ),
-                )
-              ],
+                ],
+              ),
             ),
             _widgetOptions[_selectedIndex]
           ],

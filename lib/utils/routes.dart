@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:nepal_blood_nexus/auth/login/pages/login.dart';
 import 'package:nepal_blood_nexus/auth/register/pages/register.dart';
 import 'package:nepal_blood_nexus/homepage/pages/homepage.dart';
+import 'package:nepal_blood_nexus/homepage/screens/setup.dart';
 import 'package:nepal_blood_nexus/more/more_option.dart';
 import 'package:nepal_blood_nexus/onboard/pages/onboard.dart';
+import 'package:nepal_blood_nexus/utils/models/user.dart';
+import 'package:page_transition/page_transition.dart';
 
 class Routes {
   static const String welcome = 'welcome';
@@ -47,13 +50,13 @@ class Routes {
       // case chat:
       //   UserModel user = settings.arguments as UserModel;builder
       //   return MaterialPageRoute(builder: (context) => ChatPage(user: user));
-      // case profile:
-      //   UserModel user = settings.arguments as UserModel;
-      //   return PageTransition(
-      //     child: ProfilePage(user: user),
-      //     type: PageTransitionType.fade,
-      //     duration: const Duration(milliseconds: 500),
-      //   );
+      case profile:
+        final Map user = settings.arguments as Map;
+        return PageTransition(
+          child: ProfileSetupScreen(user: user["user"]),
+          type: PageTransitionType.fade,
+          duration: const Duration(milliseconds: 500),
+        );
 
       case more:
         return MaterialPageRoute(builder: (context) => MoreOptionPage());

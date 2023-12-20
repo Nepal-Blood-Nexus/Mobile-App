@@ -5,7 +5,6 @@ import 'package:nepal_blood_nexus/homepage/pages/homepage.dart';
 import 'package:nepal_blood_nexus/homepage/screens/setup.dart';
 import 'package:nepal_blood_nexus/more/more_option.dart';
 import 'package:nepal_blood_nexus/onboard/pages/onboard.dart';
-import 'package:nepal_blood_nexus/utils/models/user.dart';
 import 'package:page_transition/page_transition.dart';
 
 class Routes {
@@ -59,7 +58,7 @@ class Routes {
         );
 
       case more:
-        return MaterialPageRoute(builder: (context) => MoreOptionPage());
+        return MaterialPageRoute(builder: (context) => const MoreOptionPage());
 
       default:
         return MaterialPageRoute(

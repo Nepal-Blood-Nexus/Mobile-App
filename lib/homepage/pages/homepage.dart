@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    late List<Widget> _widgetOptions = <Widget>[
+    late List<Widget> widgetOptions = <Widget>[
       const Text(
         'Index 1: Business',
         style: optionStyle,
@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            _widgetOptions[_selectedIndex]
+            widgetOptions[_selectedIndex]
           ],
         ),
       ),

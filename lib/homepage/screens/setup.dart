@@ -42,9 +42,10 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                   Text(
                     widget.user.fullname as String,
                     style: const TextStyle(
-                        fontSize: 19,
-                        fontWeight: FontWeight.w600,
-                        color: Colours.mainColor),
+                      fontSize: 19,
+                      fontWeight: FontWeight.w600,
+                      color: Colours.mainColor,
+                    ),
                   ),
                 ],
               ),

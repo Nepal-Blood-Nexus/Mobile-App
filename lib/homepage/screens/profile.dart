@@ -27,13 +27,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           width: 350,
-          child: widget.user?.profile?.isEmpty as bool
+          child: widget.user.profile?.isEmpty as bool
               ? ButtonV1(
                   onTap: () {
                     Navigator.pushNamed(
                       context,
                       Routes.profile,
-                      arguments: {"user": widget.user as User},
+                      arguments: {"user": widget.user},
                     );
                   },
                   text:

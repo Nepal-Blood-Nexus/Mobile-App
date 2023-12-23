@@ -1,7 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:nepal_blood_nexus/utils/colours.dart';
+import 'package:http/http.dart' as http;
+import 'package:loading_indicator/loading_indicator.dart';
+import 'package:nepal_blood_nexus/utils/models/user.dart';
+import 'package:nepal_blood_nexus/utils/routes.dart';
+
+const storage = FlutterSecureStorage();
 
 class SignupForm extends StatefulWidget {
   const SignupForm({Key? key}) : super(key: key);
@@ -13,13 +22,43 @@ class SignupForm extends StatefulWidget {
 class _SignupFormState extends State<SignupForm> {
   final _formKey = GlobalKey<FormBuilderState>();
   // final _emailFieldKey = GlobalKey<FormBuilderFieldState>();
-  late String gender;
-  late int age;
-  late String bloodGroup;
-  late int weight;
+  late bool loading = false;
+  late User user;
+  void displayDialog(context, title, text) => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(title),
+          content: Text(text),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        ),
+      );
 
-  void saveAndNext(dynamic value) {
-    debugPrint(value.toString());
+  Future saveAndNext(dynamic value) async {
+    setState(() {
+      loading = true;
+    });
+    String? token = await storage.read(key: "token");
+    var url =
+        Uri.https('nbn-server.onrender.com', 'api/auth/profile', {"step": "1"});
+
+    var res = await http.post(url, body: {
+      "gender": value["gender"],
+      "bp": value["bp"],
+      "blood_group": value["blood_group"],
+      "weight": value["weight"],
+      "age": value["age"]
+    }, headers: {
+      "authorization": "Bearer $token"
+    });
+    var response = jsonDecode(res.body);
+    return response;
   }
 
   @override
@@ -41,19 +80,9 @@ class _SignupFormState extends State<SignupForm> {
                     FormBuilderChipOption(value: "Female"),
                   ],
                   decoration: const InputDecoration(labelText: 'Gender'),
-                  onSaved: (value) {
-                    setState(() {
-                      gender = value.toString();
-                    });
-                  },
                 ),
                 FormBuilderDropdown(
                     name: "blood_group",
-                    onSaved: (value) {
-                      setState(() {
-                        bloodGroup = value.toString();
-                      });
-                    },
                     decoration: const InputDecoration(
                         labelText: 'Select your blood group'),
                     items: const [
@@ -151,7 +180,10 @@ class _SignupFormState extends State<SignupForm> {
                 ),
                 const SizedBox(height: 10),
                 MaterialButton(
+                  height: 50,
+                  minWidth: 150,
                   color: Colours.mainColor,
+                  disabledColor: Colors.black87,
                   onPressed: () {
                     if (_formKey.currentState?.saveAndValidate() ?? false) {
                       // if (true) {
@@ -162,11 +194,51 @@ class _SignupFormState extends State<SignupForm> {
                       //   // _emailFieldKey.currentState?.invalidate('Email already taken.');
                       // }
                     }
-                    saveAndNext(_formKey.currentState?.value);
+                    saveAndNext(_formKey.currentState?.value).then((response) {
+                      if (response["success"] == false) {
+                        displayDialog(context, "Failed", response["error"]);
+                        setState(() {
+                          loading = false;
+                        });
+                      } else {
+                        User user = User.fromJson(response["user"]);
+
+                        storage.write(key: "token", value: response["token"]);
+                        storage.write(
+                            key: "user", value: jsonEncode(response["user"]));
+                        setState(() {
+                          loading = false;
+                        });
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          Routes.home,
+                          (routes) => false,
+                          arguments: {"token": response["token"], "user": user},
+                        );
+                      }
+                    });
                   },
-                  child: const Text('Save & Next',
-                      style: TextStyle(color: Colors.white)),
-                )
+                  child: loading
+                      ? const LoadingIndicator(
+                          indicatorType: Indicator.pacman,
+
+                          /// Required, The loading type of the widget
+                          colors: [Colours.mainColor],
+
+                          /// Optional, The color collections
+                          strokeWidth: 1,
+
+                          /// Optional, The stroke of the line, only applicable to widget which contains line
+                          // backgroundColor: Colors.black,
+
+                          /// Optional, Background of the widget
+                          // pathBackgroundColor: Colors.black
+
+                          /// Optional, the stroke backgroundColor
+                        )
+                      : const Text('Save & Next',
+                          style: TextStyle(color: Colors.white)),
+                ),
               ],
             ),
           ),

@@ -38,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   },
                   text:
                       "Set up your profile to get insights about your blood. Click Here to setup")
-              : const Row(
+              : Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -49,39 +49,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "120–160 g/L",
-                                style: TextStyle(color: Colours.white),
+                                widget.user.profile![0]["bp"],
+                                style: const TextStyle(color: Colours.white),
                               ),
-                              Text(
-                                "Hemoglobin",
+                              const Text(
+                                "Blood Pressure",
                                 style: TextStyle(
                                     color: Colours.white,
                                     fontWeight: FontWeight.w600),
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "16 Dec 2023",
-                                style: TextStyle(color: Colours.white),
+                                widget.user.profile![0]["blood_group"] ?? "__",
+                                style: const TextStyle(color: Colours.white),
                               ),
-                              Text(
-                                "Last Donated",
+                              const Text(
+                                "Blood Group",
                                 style: TextStyle(
                                     color: Colours.white,
                                     fontWeight: FontWeight.w600),
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
-                          Column(
+                          const Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
@@ -99,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ],
                       ),
-                      Column(
+                      const Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Column(

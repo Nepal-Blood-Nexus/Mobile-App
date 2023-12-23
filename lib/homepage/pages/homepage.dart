@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.amber);
 
   void _onItemTapped(int index) {
+    print(widget.user?.profile);
     setState(() {
       _selectedIndex = index;
     });

@@ -7,6 +7,7 @@ import 'package:nepal_blood_nexus/homepage/pages/homepage.dart';
 import 'package:nepal_blood_nexus/onboard/pages/onboard.dart';
 import 'package:nepal_blood_nexus/utils/models/user.dart';
 import 'package:nepal_blood_nexus/utils/routes.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
@@ -34,11 +35,15 @@ class _MyAppState extends State<MyApp> {
   Future<void> _fetchToken() async {
     try {
       String? storedToken = await storage.read(key: 'token');
-      String? a = await storage.read(key: "user");
       if (storedToken != null) {
+        var url = Uri.https('nbn-server.onrender.com', 'api/auth/profile');
+        var res =
+            await http.get(url, headers: {"authorization": "Bearer $token"});
+        var response = jsonDecode(res.body);
+        storage.write(key: "user", value: jsonEncode(response["user"]));
         setState(() {
           token = storedToken;
-          user = User.fromJson(jsonDecode(a as String));
+          user = User.fromJson(response);
         });
       } else {
         // Handle the case when the token is not found.

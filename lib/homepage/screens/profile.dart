@@ -14,6 +14,11 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -27,7 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           width: 350,
-          child: widget.user.profile?.isEmpty as bool
+          child: widget.user.profile?.isEmpty == true
               ? ButtonV1(
                   onTap: () {
                     Navigator.pushNamed(

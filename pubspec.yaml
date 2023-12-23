@@ -45,6 +45,8 @@ dependencies:
   flutter_form_builder: ^9.1.1
   form_builder_validators: ^9.1.0
   loading_indicator: ^3.1.1
+  geolocator: ^10.1.0
+  permission_handler: ^11.1.0
 
 flutter_native_splash:
   color: "#AD2831"

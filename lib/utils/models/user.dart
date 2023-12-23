@@ -9,7 +9,7 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> parsedJson) {
     return User(
-        id: parsedJson['name'].toString(),
+        id: parsedJson['_id'].toString(),
         fullname: parsedJson['fullname'].toString(),
         email: parsedJson['fullname'].toString(),
         phone: parsedJson['fullname'].toString(),

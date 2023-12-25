@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
@@ -10,7 +12,21 @@ import 'package:nepal_blood_nexus/repository/user_repo.dart';
 import 'package:nepal_blood_nexus/utils/models/user.dart';
 import 'package:nepal_blood_nexus/utils/routes.dart';
 
-void main() {
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+        apiKey: "AIzaSyALNkDBRIvBYeOse10eXW-scLwJL6UfJMA",
+        appId: "1:757885051557:android:002463bb1bb3436b34a34c",
+        messagingSenderId: "757885051557",
+        projectId: "nepal-blood-nexus"),
+  );
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   runApp(const MyApp());
 }
 
@@ -23,14 +39,34 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final storage = const FlutterSecureStorage();
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   String token = '';
   User user = User();
+  String fcmToken = '';
 
   @override
   void initState() {
     super.initState();
     _fetchToken();
+    FirebaseMessaging.instance.getToken().then((value) => {
+          print("FCM Token Is: "),
+          print(value),
+          setState(() {
+            fcmToken = value as String;
+          })
+        });
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+        // setState(() {
+        //   notifTitle = message.notification!.title;
+        //   notifBody = message.notification!.body;
+        // });
+      }
+    });
   }
 
   void redirectToLogin() {
@@ -40,6 +76,16 @@ class _MyAppState extends State<MyApp> {
   Future<void> _fetchToken() async {
     try {
       String? storedToken = await storage.read(key: 'token');
+      NotificationSettings settings = await messaging.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true,
+      );
+
       if (storedToken != null) {
         LocationPermission permission;
 
@@ -60,7 +106,7 @@ class _MyAppState extends State<MyApp> {
                 desiredAccuracy: LocationAccuracy.best,
                 forceAndroidLocationManager: true)
             .then((Position position) {
-          saveLocation("${position.latitude},${position.longitude}")
+          saveLocation("${position.latitude},${position.longitude}", fcmToken)
               .then((response) {
             if (response != null) {
               storage.write(key: "user", value: jsonEncode(response["user"]));

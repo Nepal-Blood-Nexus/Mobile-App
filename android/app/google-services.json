@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "757885051557",
+    "project_id": "nepal-blood-nexus",
+    "storage_bucket": "nepal-blood-nexus.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:757885051557:android:002463bb1bb3436b34a34c",
+        "android_client_info": {
+          "package_name": "com.example.nepal_blood_nexus"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALNkDBRIvBYeOse10eXW-scLwJL6UfJMA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

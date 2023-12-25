@@ -22,6 +22,7 @@ class RegisterPage extends StatelessWidget {
               icon: const Icon(Icons.close),
               onPressed: () {
                 Navigator.of(context).pop();
+                Navigator.of(context).pop();
               },
             )
           ],
@@ -35,6 +36,9 @@ class RegisterPage extends StatelessWidget {
             children: [
               CircularProgressIndicator(
                 color: Colours.mainColor,
+              ),
+              SizedBox(
+                width: 10,
               ),
               Text("Loading")
             ],
@@ -135,7 +139,7 @@ class RegisterPage extends StatelessWidget {
                       displayDialog(context, "Failed", response["error"]);
                     } else {
                       User user = User.fromJson(response["user"]);
-                      String usr = jsonEncode(user);
+                      String usr = jsonEncode(response["user"]);
                       storage.write(key: "token", value: response["token"]);
                       storage.write(key: "user", value: usr);
 

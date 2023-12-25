@@ -1,16 +1,22 @@
+import 'dart:convert';
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:nepal_blood_nexus/homepage/screens/profile.dart';
+import 'package:nepal_blood_nexus/repository/user_repo.dart';
 import 'package:nepal_blood_nexus/utils/colours.dart';
 import 'package:nepal_blood_nexus/utils/models/user.dart';
 import 'package:nepal_blood_nexus/utils/routes.dart';
+import 'package:geocoding/geocoding.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, this.user, this.token});
+  HomePage({super.key, this.user, this.token});
 
-  final User? user;
-  final String? token;
+  late User? user;
+  late String? token;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -18,6 +24,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final storage = const FlutterSecureStorage();
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  String fcmToken = "";
+  String locationGeo = "";
+  String placeName = "";
+
   int _selectedIndex = 2;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.amber);
@@ -26,6 +37,100 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  Future<void> _fetchToken() async {
+    try {
+      String? storedToken = await storage.read(key: 'token');
+      String? fcmToken = await storage.read(key: 'fcmToken');
+      String? cords = await storage.read(key: 'cords');
+
+      NotificationSettings settings = await messaging.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true,
+      );
+
+      if (storedToken != null && fcmToken == null && cords == null) {
+        LocationPermission permission;
+        FirebaseMessaging.instance.getToken().then((value) => {
+              print("FCM Token Is: "),
+              print(value),
+              setState(() {
+                fcmToken = value as String;
+              }),
+            });
+        FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+          print('Got a message whilst in the foreground!');
+          print('Message data: ${message.data}');
+          if (message.notification != null) {
+            print(
+                'Message also contained a notification: ${message.notification}');
+          }
+        });
+
+        permission = await Geolocator.checkPermission();
+        if (permission == LocationPermission.denied) {
+          permission = await Geolocator.requestPermission();
+          if (permission == LocationPermission.denied) {
+            return Future.error('Location permissions are denied');
+          }
+        }
+
+        if (permission == LocationPermission.deniedForever) {
+          // Permissions are denied forever, handle appropriately.
+          return Future.error(
+              'Location permissions are permanently denied, we cannot request permissions.');
+        }
+        await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.best,
+                forceAndroidLocationManager: true)
+            .then((Position position) {
+          saveLocation("${position.latitude},${position.longitude}", fcmToken)
+              .then((response) {
+            if (response != null) {
+              storage.write(key: "user", value: jsonEncode(response["user"]));
+              storage.write(key: "token", value: response["token"]);
+              setState(() {
+                widget.token = response["token"];
+                widget.user = User.fromJson(response["user"]);
+              });
+            }
+          });
+        }).catchError((e) {
+          // print(e);
+        });
+      } else {
+        // Handle the case when the token is not found.
+      }
+    } catch (e) {
+      // Handle any exceptions that may occur during token retrieval.
+      debugPrint('Error fetching token: $e');
+      // storage.delete(key: "token");
+      // storage.delete(key: "user");
+    }
+  }
+
+  Future<void> _getPlaceName() async {
+    String? cords = await storage.read(key: 'cords');
+    var cords__ = cords.toString().split(",");
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+        double.parse(cords__[0]), double.parse(cords__[1]));
+    setState(() {
+      locationGeo =
+          "${placemarks[0].street!}, ${placemarks[0].subLocality} ${placemarks[0].locality} ${placemarks[0].subAdministrativeArea} ${placemarks[0].administrativeArea} ${placemarks[0].country}";
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchToken();
+    _getPlaceName();
   }
 
   @override
@@ -61,7 +166,7 @@ class _HomePageState extends State<HomePage> {
         height: 50,
         items: const <Widget>[
           Icon(Icons.insights, color: Colours.white),
-          Icon(Icons.school, color: Colours.white),
+          Icon(Icons.notifications, color: Colours.white),
           Icon(Icons.face_4, color: Colours.white),
           Icon(Icons.school, color: Colours.white),
           Icon(Icons.school, color: Colours.white),
@@ -69,50 +174,67 @@ class _HomePageState extends State<HomePage> {
         onTap: _onItemTapped,
       ),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(children: [
-                    Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("Good Morning"),
-                          Text(
-                            "${widget.user?.fullname}",
-                            style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
-                                color: Colours.mainColor),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                        ]),
-                  ]),
-                  IconButton(
-                    onPressed: () {
-                      // storage.delete(key: "token");
-                      // storage.delete(key: "user");
-                      Navigator.pushNamed(context, Routes.more);
-                    },
-                    icon: const Icon(
-                      Icons.read_more,
-                      size: 30,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(children: [
+                      Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("Good Morning"),
+                            Text(
+                              "${widget.user?.fullname}",
+                              style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colours.mainColor),
+                            ),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.location_on,
+                                  size: 13,
+                                  color: Colours.mainColor,
+                                ),
+                                Text(
+                                  locationGeo,
+                                  style: const TextStyle(fontSize: 11),
+                                ),
+                              ],
+                            )
+                            // Text("locationGeo"),
+                          ]),
+                    ]),
+                    IconButton(
+                      onPressed: () {
+                        // storage.delete(key: "token");
+                        // storage.delete(key: "user");
+                        Navigator.pushNamed(context, Routes.more);
+                      },
+                      icon: const Icon(
+                        Icons.read_more,
+                        size: 30,
+                      ),
+                      tooltip: "More",
+                      color: const Color.fromARGB(255, 242, 22, 22),
                     ),
-                    tooltip: "More",
-                    color: const Color.fromARGB(255, 242, 22, 22),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            widgetOptions[_selectedIndex]
-          ],
+              widgetOptions[_selectedIndex]
+            ],
+          ),
         ),
       ),
     );

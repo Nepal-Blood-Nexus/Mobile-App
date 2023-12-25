@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:nepal_blood_nexus/utils/colours.dart';
 import 'package:nepal_blood_nexus/utils/models/user.dart';
 import 'package:nepal_blood_nexus/utils/routes.dart';
 import 'package:nepal_blood_nexus/widgets/button_v1.dart';
+import 'package:http/http.dart' as http;
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key, required this.user});
@@ -13,6 +15,14 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  // The query currently being searched for. If null, there is no pending
+  // request.
+  String? _searchingWithQuery;
+  bool showHintTextInput = false;
+
+  // The most recent options received from the API.
+  late Iterable<String> _lastOptions = <String>[];
+
   @override
   void initState() {
     super.initState();
@@ -86,14 +96,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           const SizedBox(
                             height: 20,
                           ),
-                          const Column(
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "0.025–0.035 L/kg",
-                                style: TextStyle(color: Colours.white),
+                                widget.user.profile![0]["rbc"] ?? "__",
+                                style: const TextStyle(color: Colours.white),
                               ),
-                              Text(
+                              const Text(
                                 "RBC",
                                 style: TextStyle(
                                   color: Colours.white,
@@ -104,17 +114,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ],
                       ),
-                      const Column(
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                "120–160 g/L",
-                                style: TextStyle(color: Colours.white),
+                                widget.user.profile![0]["hemoglobin"] ?? "__",
+                                style: const TextStyle(color: Colours.white),
                               ),
-                              Text(
+                              const Text(
                                 "Hemoglobin",
                                 style: TextStyle(
                                     color: Colours.white,
@@ -122,17 +132,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                "0.025–0.035 L/kg",
+                                widget.user.profile![0]["rbc"] ?? "__",
                                 style: TextStyle(color: Colours.white),
                               ),
-                              Text(
+                              const Text(
                                 "RBC",
                                 style: TextStyle(
                                   color: Colours.white,
@@ -141,18 +151,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                "0.15–0.47 mmol/L",
+                                widget.user.profile![0]["wbc"] ?? "__",
                                 style: TextStyle(color: Colours.white),
                               ),
-                              Text(
-                                "Uric Acid",
+                              const Text(
+                                "WBC Count",
                                 style: TextStyle(
                                   color: Colours.white,
                                   fontWeight: FontWeight.w600,
@@ -164,7 +174,156 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ]),
         ),
+        const SizedBox(
+          height: 20,
+        ),
+        widget.user.profile?.isEmpty == false
+            ? ButtonV1(
+                onTap: () {
+                  showModalBottomSheet<void>(
+                    useSafeArea: true,
+                    isDismissible: true,
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Padding(
+                        padding: MediaQuery.of(context).viewInsets,
+                        child: Container(
+                          height: 450,
+                          color: const Color.fromARGB(255, 242, 241, 239),
+                          child: Center(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  FormBuilderRadioGroup(
+                                    name: "gender",
+                                    options: const [
+                                      FormBuilderChipOption(value: "Male"),
+                                      FormBuilderChipOption(value: "Female"),
+                                    ],
+                                    decoration: const InputDecoration(
+                                        labelText: 'Gender'),
+                                  ),
+                                  FormBuilderDropdown(
+                                    name: "blood_group",
+                                    decoration: const InputDecoration(
+                                        labelText: 'Select your blood group'),
+                                    items: const [
+                                      DropdownMenuItem(
+                                        value: "AB +ve",
+                                        child: Text("AB +ve"),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: "AB -ve",
+                                        child: Text("AB -ve"),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: "A -ve",
+                                        child: Text("A -ve"),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: "A +ve",
+                                        child: Text("A +ve"),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: "O +ve",
+                                        child: Text("O +ve"),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: "O -ve",
+                                        child: Text("O -ve"),
+                                      ),
+                                    ],
+                                  ),
+                                  FormBuilderCheckbox(
+                                    name: "emergency",
+                                    title: const Text("Emergency mode?"),
+                                  ),
+                                  FormBuilderCheckbox(
+                                    onChanged: (value) {
+                                      setState(() {
+                                        showHintTextInput =
+                                            value == true ? true : false;
+                                      });
+                                    },
+                                    name: "location_other",
+                                    title: const Text(
+                                        "Other than your current location?"),
+                                  ),
+
+                                  Autocomplete(
+                                    optionsMaxHeight: 100,
+                                    optionsBuilder: (TextEditingValue
+                                        textEditingValue) async {
+                                      _searchingWithQuery =
+                                          textEditingValue.text;
+                                      final Iterable<String> options =
+                                          await _FakeAPI.search(
+                                              _searchingWithQuery!);
+
+                                      // If another search happened after this one, throw away these options.
+                                      // Use the previous options intead and wait for the newer request to
+                                      // finish.
+                                      if (_searchingWithQuery !=
+                                          textEditingValue.text) {
+                                        return _lastOptions;
+                                      }
+
+                                      _lastOptions = options;
+                                      return options;
+                                    },
+                                    onSelected: (String selection) {
+                                      debugPrint(
+                                          'You just selected $selection');
+                                    },
+                                  ),
+                                  ButtonV1(onTap: () {}, text: "SUBMIT"),
+                                  // ElevatedButton(
+                                  //   child: const Text('Close BottomSheet'),
+                                  //   onPressed: () => Navigator.pop(context),
+                                  // ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                text: "Request Blood")
+            : const SizedBox(
+                height: 0,
+              )
       ],
     );
+  }
+}
+
+const Duration fakeAPIDuration = Duration(seconds: 1);
+
+class _FakeAPI {
+  static const List<String> _kOptions = <String>[
+    'aardvark',
+    'bobcat',
+    'chameleon',
+  ];
+
+  // Searches the options, but injects a fake "network" delay.
+  static Future<Iterable<String>> search(String query) async {
+    await Future<void>.delayed(fakeAPIDuration); // Fake 1 second delay.
+    if (query == '') {
+      return const Iterable<String>.empty();
+    }
+    // https://api.geoapify.com/v1/geocode/autocomplete?text=YOUR_TEXT&format=json&apiKey=YOUR_API_KEY
+
+    var url =
+        Uri.https('nbn-server.onrender.com', 'api/auth/profile', {"step": "0"});
+    var res = await http.get(url);
+    return const Iterable<String>.empty();
   }
 }

@@ -49,24 +49,6 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _fetchToken();
-    FirebaseMessaging.instance.getToken().then((value) => {
-          print("FCM Token Is: "),
-          print(value),
-          setState(() {
-            fcmToken = value as String;
-          })
-        });
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
-      if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
-        // setState(() {
-        //   notifTitle = message.notification!.title;
-        //   notifBody = message.notification!.body;
-        // });
-      }
-    });
   }
 
   void redirectToLogin() {
@@ -88,6 +70,25 @@ class _MyAppState extends State<MyApp> {
 
       if (storedToken != null) {
         LocationPermission permission;
+        FirebaseMessaging.instance.getToken().then((value) => {
+              print("FCM Token Is: "),
+              print(value),
+              setState(() {
+                fcmToken = value as String;
+              })
+            });
+        FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+          print('Got a message whilst in the foreground!');
+          print('Message data: ${message.data}');
+          if (message.notification != null) {
+            print(
+                'Message also contained a notification: ${message.notification}');
+            // setState(() {
+            //   notifTitle = message.notification!.title;
+            //   notifBody = message.notification!.body;
+            // });
+          }
+        });
 
         permission = await Geolocator.checkPermission();
         if (permission == LocationPermission.denied) {

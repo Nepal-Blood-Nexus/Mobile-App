@@ -15,8 +15,8 @@ import 'package:geocoding/geocoding.dart';
 class HomePage extends StatefulWidget {
   HomePage({super.key, this.user, this.token});
 
-  late User? user;
-  late String? token;
+  final User? user;
+  final String? token;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -27,7 +27,9 @@ class _HomePageState extends State<HomePage> {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   String fcmToken = "";
   String locationGeo = "";
-  String placeName = "";
+  User user = User();
+  String token = "";
+  // String placeName = "";
 
   int _selectedIndex = 2;
   static const TextStyle optionStyle =
@@ -45,7 +47,7 @@ class _HomePageState extends State<HomePage> {
       String? fcmToken = await storage.read(key: 'fcmToken');
       String? cords = await storage.read(key: 'cords');
 
-      NotificationSettings settings = await messaging.requestPermission(
+      await messaging.requestPermission(
         alert: true,
         announcement: false,
         badge: true,
@@ -96,8 +98,8 @@ class _HomePageState extends State<HomePage> {
               storage.write(key: "user", value: jsonEncode(response["user"]));
               storage.write(key: "token", value: response["token"]);
               setState(() {
-                widget.token = response["token"];
-                widget.user = User.fromJson(response["user"]);
+                token = response["token"];
+                user = User.fromJson(response["user"]);
               });
             }
           });
@@ -122,7 +124,7 @@ class _HomePageState extends State<HomePage> {
         double.parse(cords__[0]), double.parse(cords__[1]));
     setState(() {
       locationGeo =
-          "${placemarks[0].street!}, ${placemarks[0].subLocality} ${placemarks[0].locality} ${placemarks[0].subAdministrativeArea} ${placemarks[0].administrativeArea} ${placemarks[0].country}";
+          "${placemarks[0].street!}, ${placemarks[0].subLocality} ${placemarks[0].locality} ${placemarks[0].administrativeArea} ${placemarks[0].country}";
     });
   }
 
@@ -131,6 +133,8 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _fetchToken();
     _getPlaceName();
+    user = widget.user as User;
+    token = widget.token as String;
   }
 
   @override
@@ -144,9 +148,7 @@ class _HomePageState extends State<HomePage> {
         'Index 2: Home',
         style: optionStyle,
       ),
-      ProfileScreen(
-        user: widget.user as User,
-      ),
+      ProfileScreen(user: user, currentLocation: locationGeo),
       const Text(
         'Index 4: Requests',
         style: optionStyle,
@@ -167,7 +169,7 @@ class _HomePageState extends State<HomePage> {
         items: const <Widget>[
           Icon(Icons.insights, color: Colours.white),
           Icon(Icons.notifications, color: Colours.white),
-          Icon(Icons.face_4, color: Colours.white),
+          Icon(Icons.home_filled, color: Colours.white),
           Icon(Icons.school, color: Colours.white),
           Icon(Icons.school, color: Colours.white),
         ],
@@ -191,7 +193,7 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             const Text("Good Morning"),
                             Text(
-                              "${widget.user?.fullname}",
+                              "${user.fullname}",
                               style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w500,

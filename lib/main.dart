@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
   Future<void> _fetchToken() async {
     try {
       String? storedToken = await storage.read(key: 'token');
-      NotificationSettings settings = await messaging.requestPermission(
+      await messaging.requestPermission(
         alert: true,
         announcement: false,
         badge: true,

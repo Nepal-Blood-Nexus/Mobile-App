@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nepal_blood_nexus/auth/login/pages/login.dart';
 import 'package:nepal_blood_nexus/auth/register/pages/register.dart';
+import 'package:nepal_blood_nexus/bloodrequest/bloodrequest.dart';
 import 'package:nepal_blood_nexus/homepage/pages/homepage.dart';
 import 'package:nepal_blood_nexus/homepage/screens/setup.dart';
 import 'package:nepal_blood_nexus/more/more_option.dart';
@@ -14,6 +15,7 @@ class Routes {
   static const String profile = 'profile';
   static const String register = 'register';
   static const String more = 'more';
+  static const String bloodrequest = 'bloodrequest';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -53,6 +55,13 @@ class Routes {
         final Map user = settings.arguments as Map;
         return PageTransition(
           child: ProfileSetupScreen(user: user["user"]),
+          type: PageTransitionType.fade,
+          duration: const Duration(milliseconds: 500),
+        );
+      case bloodrequest:
+        return PageTransition(
+          child: BloodRequestPage(
+              values: settings.arguments as Map<String, dynamic>),
           type: PageTransitionType.fade,
           duration: const Duration(milliseconds: 500),
         );

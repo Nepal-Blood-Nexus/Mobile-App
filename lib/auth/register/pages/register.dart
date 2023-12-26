@@ -147,7 +147,7 @@ class RegisterPage extends StatelessWidget {
                         context,
                         Routes.home,
                         (routes) => false,
-                        arguments: {"token": response["token"], "user": usr},
+                        arguments: {"token": response["token"], "user": user},
                       );
                     }
                   });

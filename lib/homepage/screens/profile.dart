@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:nepal_blood_nexus/utils/colours.dart';
 import 'package:nepal_blood_nexus/utils/models/user.dart';
 import 'package:nepal_blood_nexus/utils/routes.dart';
@@ -7,8 +10,10 @@ import 'package:nepal_blood_nexus/widgets/button_v1.dart';
 import 'package:http/http.dart' as http;
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key, required this.user});
+  const ProfileScreen(
+      {super.key, required this.user, required this.currentLocation});
   final User user;
+  final String currentLocation;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -19,6 +24,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // request.
   String? _searchingWithQuery;
   bool showHintTextInput = false;
+  final _formKey = GlobalKey<FormBuilderState>();
+  late Map<String, dynamic> formData = {
+    "gender": "",
+    "blood_group": "",
+    "emergency": "",
+    "location": widget.currentLocation,
+    "cordinates": ""
+  };
 
   // The most recent options received from the API.
   late Iterable<String> _lastOptions = <String>[];
@@ -26,6 +39,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+
+    setState(() {
+      formData["cordinates"] = widget.user.last_location;
+    });
   }
 
   @override
@@ -189,104 +206,141 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       return Padding(
                         padding: MediaQuery.of(context).viewInsets,
                         child: Container(
-                          height: 450,
+                          height: 500,
                           color: const Color.fromARGB(255, 242, 241, 239),
                           child: Center(
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 15),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  FormBuilderRadioGroup(
-                                    name: "gender",
-                                    options: const [
-                                      FormBuilderChipOption(value: "Male"),
-                                      FormBuilderChipOption(value: "Female"),
-                                    ],
-                                    decoration: const InputDecoration(
-                                        labelText: 'Gender'),
-                                  ),
-                                  FormBuilderDropdown(
-                                    name: "blood_group",
-                                    decoration: const InputDecoration(
-                                        labelText: 'Select your blood group'),
-                                    items: const [
-                                      DropdownMenuItem(
-                                        value: "AB +ve",
-                                        child: Text("AB +ve"),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "AB -ve",
-                                        child: Text("AB -ve"),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "A -ve",
-                                        child: Text("A -ve"),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "A +ve",
-                                        child: Text("A +ve"),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "O +ve",
-                                        child: Text("O +ve"),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "O -ve",
-                                        child: Text("O -ve"),
-                                      ),
-                                    ],
-                                  ),
-                                  FormBuilderCheckbox(
-                                    name: "emergency",
-                                    title: const Text("Emergency mode?"),
-                                  ),
-                                  FormBuilderCheckbox(
-                                    onChanged: (value) {
-                                      setState(() {
-                                        showHintTextInput =
-                                            value == true ? true : false;
-                                      });
-                                    },
-                                    name: "location_other",
-                                    title: const Text(
-                                        "Other than your current location?"),
-                                  ),
+                              child: FormBuilder(
+                                key: _formKey,
+                                child: Column(
+                                  // mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    FormBuilderRadioGroup(
+                                      name: "gender",
+                                      onChanged: (value) {
+                                        print(value);
+                                        setState(() {
+                                          formData["gender"] = value!;
+                                        });
+                                      },
+                                      options: const [
+                                        FormBuilderChipOption(value: "Male"),
+                                        FormBuilderChipOption(value: "Female"),
+                                      ],
+                                      decoration: const InputDecoration(
+                                          labelText: 'Gender'),
+                                    ),
+                                    FormBuilderDropdown(
+                                      name: "blood_group",
+                                      onChanged: (value) {
+                                        setState(() {
+                                          formData["blood_group"] = value!;
+                                        });
+                                      },
+                                      decoration: const InputDecoration(
+                                          labelText: 'Select your blood group'),
+                                      items: const [
+                                        DropdownMenuItem(
+                                          value: "AB +ve",
+                                          child: Text("AB +ve"),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: "AB -ve",
+                                          child: Text("AB -ve"),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: "A -ve",
+                                          child: Text("A -ve"),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: "A +ve",
+                                          child: Text("A +ve"),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: "O +ve",
+                                          child: Text("O +ve"),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: "O -ve",
+                                          child: Text("O -ve"),
+                                        ),
+                                      ],
+                                    ),
+                                    FormBuilderCheckbox(
+                                      name: "emergency",
+                                      onChanged: (value) {
+                                        setState(() {
+                                          formData["emergency"] = value!;
+                                        });
+                                      },
+                                      title: const Text("Emergency mode?"),
+                                    ),
 
-                                  Autocomplete(
-                                    optionsMaxHeight: 100,
-                                    optionsBuilder: (TextEditingValue
-                                        textEditingValue) async {
-                                      _searchingWithQuery =
-                                          textEditingValue.text;
-                                      final Iterable<String> options =
-                                          await _FakeAPI.search(
-                                              _searchingWithQuery!);
+                                    const Text("Your Location"),
+                                    Autocomplete(
+                                      optionsMaxHeight: 100,
+                                      initialValue: TextEditingValue(
+                                          text: widget.currentLocation),
+                                      optionsBuilder: (TextEditingValue
+                                          textEditingValue) async {
+                                        _searchingWithQuery =
+                                            textEditingValue.text;
+                                        final Iterable<String> options =
+                                            await _FakeAPI.search(
+                                                _searchingWithQuery!);
 
-                                      // If another search happened after this one, throw away these options.
-                                      // Use the previous options intead and wait for the newer request to
-                                      // finish.
-                                      if (_searchingWithQuery !=
-                                          textEditingValue.text) {
-                                        return _lastOptions;
-                                      }
+                                        // If another search happened after this one, throw away these options.
+                                        // Use the previous options intead and wait for the newer request to
+                                        // finish.
+                                        if (_searchingWithQuery !=
+                                            textEditingValue.text) {
+                                          return _lastOptions;
+                                        }
 
-                                      _lastOptions = options;
-                                      return options;
-                                    },
-                                    onSelected: (String selection) {
-                                      debugPrint(
-                                          'You just selected $selection');
-                                    },
-                                  ),
-                                  ButtonV1(onTap: () {}, text: "SUBMIT"),
-                                  // ElevatedButton(
-                                  //   child: const Text('Close BottomSheet'),
-                                  //   onPressed: () => Navigator.pop(context),
-                                  // ),
-                                ],
+                                        _lastOptions = options;
+                                        return options;
+                                      },
+                                      onSelected: (String selection) async {
+                                        setState(() {
+                                          formData["location"] = selection == ''
+                                              ? widget.currentLocation
+                                              : selection;
+                                        });
+                                        if (selection != '') {
+                                          var cords__ =
+                                              await locationFromAddress(
+                                                  selection.toString());
+                                          setState(() {
+                                            formData["cordinates"] =
+                                                "${cords__[0].latitude},${cords__[0].longitude}";
+                                          });
+                                        }
+                                      },
+                                    ),
+
+                                    ButtonV1(
+                                        onTap: () {
+                                          setState(() {
+                                            formData["location"] =
+                                                formData["location"] == ''
+                                                    ? widget.currentLocation
+                                                    : formData["location"];
+                                          });
+                                          Navigator.pop(context);
+                                          Navigator.pushNamed(
+                                              context, Routes.bloodrequest,
+                                              arguments: formData);
+                                        },
+                                        text: "SUBMIT"),
+                                    // ElevatedButton(
+                                    //   child: const Text('Close BottomSheet'),
+                                    //   onPressed: () => Navigator.pop(context),
+                                    // ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -307,11 +361,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 const Duration fakeAPIDuration = Duration(seconds: 1);
 
 class _FakeAPI {
-  static const List<String> _kOptions = <String>[
-    'aardvark',
-    'bobcat',
-    'chameleon',
-  ];
+  // static const List<String> _kOptions = <String>[
+  //   'aardvark',
+  //   'bobcat',
+  //   'chameleon',
+  // ];
 
   // Searches the options, but injects a fake "network" delay.
   static Future<Iterable<String>> search(String query) async {
@@ -321,9 +375,24 @@ class _FakeAPI {
     }
     // https://api.geoapify.com/v1/geocode/autocomplete?text=YOUR_TEXT&format=json&apiKey=YOUR_API_KEY
 
-    var url =
-        Uri.https('nbn-server.onrender.com', 'api/auth/profile', {"step": "0"});
+    var url = Uri.https('api.geoapify.com', 'v1/geocode/autocomplete', {
+      "text": query,
+      "fromat": "json",
+      "apiKey": "5623ad58e71b41aba6091347e51b709a"
+    });
     var res = await http.get(url);
-    return const Iterable<String>.empty();
+    Map<String, dynamic> jsonResponse = json.decode(res.body);
+
+    List<String> placeNames = (jsonResponse['features'] as List)
+        .map<String>((feature) => feature['properties']['formatted'].toString())
+        .toList();
+    // Print the list of place names
+    for (String placeName in placeNames) {
+      print(placeName);
+    }
+
+    return placeNames;
+
+    // return const Iterable<String>.empty();
   }
 }

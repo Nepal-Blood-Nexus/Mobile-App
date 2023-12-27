@@ -15,61 +15,40 @@ class _OnboardPageState extends State<OnboardPage> {
   late int index;
   final onboardingPagesList = [
     PageModel(
-      widget: Column(
-        children: [
-          Expanded(
-            child: Image.asset(
-              "assets/images/1.png",
-              color: const Color.fromARGB(255, 247, 106, 106),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              color: const Color.fromARGB(255, 255, 255, 255),
-            ),
-          )
-        ],
-      ),
-    ),
-    PageModel(
-      widget: DecoratedBox(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(
-            width: 0.0,
-            color: Colors.white,
-          ),
-        ),
-        child: SingleChildScrollView(
-          controller: ScrollController(),
+      widget: Container(
+        child: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 45.0,
-                  vertical: 90.0,
-                ),
-                child: Image.asset('assets/images/2.png'),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'CHANGE AND RISE',
-                    style: pageTitleStyle,
-                    textAlign: TextAlign.left,
-                  ),
+              Expanded(
+                child: Image.asset(
+                  "assets/images/bg_icon_1.png",
+                  width: 180,
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Give others access to any file or folders you choose',
-                    style: pageInfoStyle,
-                    textAlign: TextAlign.left,
+              const Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 35),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Find Blood Donors",
+                        style: TextStyle(
+                            fontSize: 30,
+                            color: Color.fromARGB(255, 255, 255, 255)),
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      Text(
+                        "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
+                        style: TextStyle(
+                            color: Colours.white,
+                            fontSize: 17,
+                            locale: Locale('npl', 'NP')),
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -79,44 +58,83 @@ class _OnboardPageState extends State<OnboardPage> {
       ),
     ),
     PageModel(
-      widget: DecoratedBox(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(
-            width: 0.0,
-            color: Colors.white,
-          ),
-        ),
-        child: SingleChildScrollView(
-          controller: ScrollController(),
+      widget: Container(
+        child: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 45.0,
-                  vertical: 90.0,
+              Expanded(
+                child: Image.asset(
+                  "assets/images/bg_icon_1.png",
+                  width: 180,
                 ),
-                child: Image.asset('assets/images/3.png'),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'EASY ACCESS',
-                    style: pageTitleStyle,
-                    textAlign: TextAlign.left,
+              const Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 35),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Valuable Blood Insights",
+                        style: TextStyle(
+                            fontSize: 30,
+                            color: Color.fromARGB(255, 255, 255, 255)),
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      Text(
+                        "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
+                        style: TextStyle(
+                            color: Colours.white,
+                            fontSize: 17,
+                            locale: Locale('npl', 'NP')),
+                      )
+                    ],
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Reach your files anytime from any devices anywhere',
-                    style: pageInfoStyle,
-                    textAlign: TextAlign.left,
+            ],
+          ),
+        ),
+      ),
+    ),
+    PageModel(
+      widget: Container(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Image.asset(
+                  "assets/images/bg_icon_1.png",
+                  width: 180,
+                ),
+              ),
+              const Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 35),
+                  child: Column(
+                    children: [
+                      Text(
+                        "BE A PART OF COMMUNITY",
+                        style: TextStyle(
+                            fontSize: 30,
+                            color: Color.fromARGB(255, 255, 255, 255)),
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      Text(
+                        "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
+                        style: TextStyle(
+                            color: Colours.white,
+                            fontSize: 17,
+                            locale: Locale('npl', 'NP')),
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -149,12 +167,20 @@ class _OnboardPageState extends State<OnboardPage> {
         },
         child: const Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(
-            'Next',
-            style: TextStyle(
-              color: Colours.mainColor,
-              fontWeight: FontWeight.w600,
-            ),
+          child: Row(
+            children: [
+              Text(
+                'Next',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Icon(
+                Icons.navigate_next_rounded,
+                color: Colours.white,
+              )
+            ],
           ),
         ),
       ),
@@ -164,7 +190,7 @@ class _OnboardPageState extends State<OnboardPage> {
   Material get _signupButton {
     return Material(
       borderRadius: const BorderRadius.all(Radius.circular(2)),
-      color: Colours.mainColor,
+      color: const Color.fromARGB(255, 255, 255, 255),
       child: InkWell(
         onTap: () {
           Navigator.pushNamed(
@@ -176,7 +202,10 @@ class _OnboardPageState extends State<OnboardPage> {
           padding: EdgeInsets.all(10),
           child: Text(
             'Sign up',
-            style: defaultProceedButtonTextStyle,
+            style: TextStyle(
+                color: Colours.mainColor,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.7),
           ),
         ),
       ),
@@ -186,7 +215,7 @@ class _OnboardPageState extends State<OnboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colours.mainColor,
       body: Onboarding(
         pages: onboardingPagesList,
         onPageChange: (int pageIndex) {
@@ -197,7 +226,7 @@ class _OnboardPageState extends State<OnboardPage> {
           return DecoratedBox(
             decoration: const BoxDecoration(),
             child: ColoredBox(
-                color: const Color.fromARGB(221, 255, 255, 255),
+                color: Colours.mainColor,
                 child: Container(
                     // color: Colors.black,
                     alignment: Alignment.center,
@@ -214,12 +243,12 @@ class _OnboardPageState extends State<OnboardPage> {
                               pagesLength: pagesLength,
                               indicator: Indicator(
                                 closedIndicator: const ClosedIndicator(
-                                    color: Colours.mainColor),
+                                    color: Color.fromARGB(255, 255, 255, 255)),
                                 indicatorDesign: IndicatorDesign.polygon(
                                   polygonDesign: PolygonDesign(
                                       polygon: DesignType.polygon_circle,
-                                      polygonSpacer: 20.0,
-                                      polygonRadius: 5),
+                                      polygonSpacer: 24.0,
+                                      polygonRadius: 6),
                                 ),
                               ),
                             ),

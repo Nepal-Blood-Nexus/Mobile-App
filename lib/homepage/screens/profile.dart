@@ -8,6 +8,7 @@ import 'package:nepal_blood_nexus/utils/models/user.dart';
 import 'package:nepal_blood_nexus/utils/routes.dart';
 import 'package:nepal_blood_nexus/widgets/button_v1.dart';
 import 'package:http/http.dart' as http;
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen(
@@ -23,6 +24,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // The query currently being searched for. If null, there is no pending
   // request.
   String? _searchingWithQuery;
+  bool loading = true;
   bool showHintTextInput = false;
   final _formKey = GlobalKey<FormBuilderState>();
   late Map<String, dynamic> formData = {
@@ -36,6 +38,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // The most recent options received from the API.
   late Iterable<String> _lastOptions = <String>[];
 
+  Future setLoadingOff() async {
+    return await Future.delayed(const Duration(seconds: 4), () {
+      setState(() {
+        loading = false;
+      });
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -43,6 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       formData["cordinates"] = widget.user.last_location;
     });
+    setLoadingOff();
   }
 
   @override
@@ -51,11 +62,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: 20,
+          ),
           decoration: const BoxDecoration(
+            shape: BoxShape.rectangle,
             color: Colours.mainColor,
             image: DecorationImage(
-              image: AssetImage("assets/images/1.png"),
+              alignment: Alignment.center,
+              fit: BoxFit.contain,
+              opacity: 0.3,
+              image: AssetImage(
+                "assets/images/bg_icon_1.png",
+              ),
             ),
           ),
           width: 350,
@@ -70,126 +90,130 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   },
                   text:
                       "Set up your profile to get insights about your blood. Click Here to setup")
-              : Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.user.profile![0]["bp"],
-                                style: const TextStyle(color: Colours.white),
-                              ),
-                              const Text(
-                                "Blood Pressure",
-                                style: TextStyle(
-                                    color: Colours.white,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.user.profile![0]["blood_group"] ?? "__",
-                                style: const TextStyle(color: Colours.white),
-                              ),
-                              const Text(
-                                "Blood Group",
-                                style: TextStyle(
-                                    color: Colours.white,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.user.profile![0]["rbc"] ?? "__",
-                                style: const TextStyle(color: Colours.white),
-                              ),
-                              const Text(
-                                "RBC",
-                                style: TextStyle(
-                                  color: Colours.white,
-                                  fontWeight: FontWeight.w600,
+              : Skeletonizer(
+                  enabled: loading,
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.user.profile![0]["bp"],
+                                  style: const TextStyle(color: Colours.white),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                widget.user.profile![0]["hemoglobin"] ?? "__",
-                                style: const TextStyle(color: Colours.white),
-                              ),
-                              const Text(
-                                "Hemoglobin",
-                                style: TextStyle(
+                                const Text(
+                                  "Blood Pressure",
+                                  style: TextStyle(
+                                      color: Colours.white,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.user.profile![0]["blood_group"] ??
+                                      "__",
+                                  style: const TextStyle(color: Colours.white),
+                                ),
+                                const Text(
+                                  "Blood Group",
+                                  style: TextStyle(
+                                      color: Colours.white,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.user.profile![0]["rbc"] ?? "__",
+                                  style: const TextStyle(color: Colours.white),
+                                ),
+                                const Text(
+                                  "RBC",
+                                  style: TextStyle(
                                     color: Colours.white,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                widget.user.profile![0]["rbc"] ?? "__",
-                                style: TextStyle(color: Colours.white),
-                              ),
-                              const Text(
-                                "RBC",
-                                style: TextStyle(
-                                  color: Colours.white,
-                                  fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                widget.user.profile![0]["wbc"] ?? "__",
-                                style: TextStyle(color: Colours.white),
-                              ),
-                              const Text(
-                                "WBC Count",
-                                style: TextStyle(
-                                  color: Colours.white,
-                                  fontWeight: FontWeight.w600,
+                              ],
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  widget.user.profile![0]["hemoglobin"] ?? "__",
+                                  style: const TextStyle(color: Colours.white),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ]),
+                                const Text(
+                                  "Hemoglobin",
+                                  style: TextStyle(
+                                      color: Colours.white,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  widget.user.profile![0]["rbc"] ?? "__",
+                                  style: TextStyle(color: Colours.white),
+                                ),
+                                const Text(
+                                  "Last Donated",
+                                  style: TextStyle(
+                                    color: Colours.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  widget.user.profile![0]["wbc"] ?? "__",
+                                  style: TextStyle(color: Colours.white),
+                                ),
+                                const Text(
+                                  "WBC Count",
+                                  style: TextStyle(
+                                    color: Colours.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ]),
+                ),
         ),
         const SizedBox(
           height: 20,
@@ -387,9 +411,6 @@ class _FakeAPI {
         .map<String>((feature) => feature['properties']['formatted'].toString())
         .toList();
     // Print the list of place names
-    for (String placeName in placeNames) {
-      print(placeName);
-    }
 
     return placeNames;
 

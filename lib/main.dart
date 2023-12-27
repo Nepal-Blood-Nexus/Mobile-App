@@ -11,6 +11,7 @@ import 'package:nepal_blood_nexus/onboard/pages/onboard.dart';
 import 'package:nepal_blood_nexus/repository/user_repo.dart';
 import 'package:nepal_blood_nexus/utils/models/user.dart';
 import 'package:nepal_blood_nexus/utils/routes.dart';
+import 'package:nepal_blood_nexus/widgets/loading.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
@@ -44,6 +45,7 @@ class _MyAppState extends State<MyApp> {
   String token = '';
   User user = User();
   String fcmToken = '';
+  bool loading = false;
 
   @override
   void initState() {
@@ -69,6 +71,10 @@ class _MyAppState extends State<MyApp> {
       );
 
       if (storedToken != null) {
+        debugPrint("token not null setting loading");
+        setState(() {
+          loading = true;
+        });
         LocationPermission permission;
         FirebaseMessaging.instance.getToken().then((value) => {
               print("FCM Token Is: "),
@@ -78,11 +84,10 @@ class _MyAppState extends State<MyApp> {
               })
             });
         FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-          print('Got a message whilst in the foreground!');
           print('Message data: ${message.data}');
           if (message.notification != null) {
             print(
-                'Message also contained a notification: ${message.notification}');
+                'Message also contained a notification: ${message.notification?.title} ${message.notification?.body}');
             // setState(() {
             //   notifTitle = message.notification!.title;
             //   notifBody = message.notification!.body;
@@ -115,6 +120,7 @@ class _MyAppState extends State<MyApp> {
               setState(() {
                 token = response["token"];
                 user = User.fromJson(response["user"]);
+                loading = false;
               });
             }
           });
@@ -150,12 +156,14 @@ class _MyAppState extends State<MyApp> {
       ),
       debugShowCheckedModeBanner: false,
       title: 'Nepal Blood Nexus',
-      home: (token != "")
-          ? HomePage(
-              token: token,
-              user: user,
-            )
-          : const OnboardPage(),
+      home: loading
+          ? const Loading()
+          : (token != "")
+              ? HomePage(
+                  token: token,
+                  user: user,
+                )
+              : const OnboardPage(),
       onGenerateRoute: Routes.onGenerateRoute,
     );
   }

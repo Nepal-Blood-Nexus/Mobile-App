@@ -62,11 +62,15 @@ class LoginPage extends StatelessWidget {
   }
 
   Future _register() async {
-    var email = emailController.text;
-    var password = passwordController.text;
-    var phone = phoneController.text;
-    var res = await attemptSignUp(email, phone, password);
-    return res;
+    try {
+      var email = emailController.text;
+      var password = passwordController.text;
+      var phone = phoneController.text;
+      var res = await attemptSignUp(email, phone, password);
+      return res;
+    } catch (e) {
+      if (e.toString() != '') {}
+    }
   }
 
   @override

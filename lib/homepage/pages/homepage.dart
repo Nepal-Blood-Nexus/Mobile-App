@@ -11,9 +11,10 @@ import 'package:nepal_blood_nexus/utils/colours.dart';
 import 'package:nepal_blood_nexus/utils/models/user.dart';
 import 'package:nepal_blood_nexus/utils/routes.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key, this.user, this.token});
+  const HomePage({super.key, this.user, this.token});
 
   final User? user;
   final String? token;
@@ -27,8 +28,10 @@ class _HomePageState extends State<HomePage> {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   String fcmToken = "";
   String locationGeo = "";
+  String cords = "";
   User user = User();
   String token = "";
+  bool loading = false;
   // String placeName = "";
 
   int _selectedIndex = 2;
@@ -41,11 +44,13 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Future<void> _fetchToken() async {
+  Future _fetchToken() async {
     try {
+      setState(() {
+        loading = true;
+      });
+      print("fetch token in homepage");
       String? storedToken = await storage.read(key: 'token');
-      String? fcmToken = await storage.read(key: 'fcmToken');
-      String? cords = await storage.read(key: 'cords');
 
       await messaging.requestPermission(
         alert: true,
@@ -57,11 +62,9 @@ class _HomePageState extends State<HomePage> {
         sound: true,
       );
 
-      if (storedToken != null && fcmToken == null && cords == null) {
+      if (storedToken != null && (fcmToken == "" || cords == "")) {
         LocationPermission permission;
         FirebaseMessaging.instance.getToken().then((value) => {
-              print("FCM Token Is: "),
-              print(value),
               setState(() {
                 fcmToken = value as String;
               }),
@@ -92,14 +95,20 @@ class _HomePageState extends State<HomePage> {
                 desiredAccuracy: LocationAccuracy.best,
                 forceAndroidLocationManager: true)
             .then((Position position) {
+          print("saving cords");
           saveLocation("${position.latitude},${position.longitude}", fcmToken)
-              .then((response) {
+              .then((response) async {
             if (response != null) {
               storage.write(key: "user", value: jsonEncode(response["user"]));
               storage.write(key: "token", value: response["token"]);
+              storage.write(
+                  key: "fcmToken",
+                  value: "${position.latitude},${position.longitude}");
+              await _getPlaceName("${position.latitude},${position.longitude}");
               setState(() {
                 token = response["token"];
                 user = User.fromJson(response["user"]);
+                cords = "${position.latitude},${position.longitude}";
               });
             }
           });
@@ -117,24 +126,29 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> _getPlaceName() async {
-    String? cords = await storage.read(key: 'cords');
-    var cords__ = cords.toString().split(",");
-    List<Placemark> placemarks = await placemarkFromCoordinates(
-        double.parse(cords__[0]), double.parse(cords__[1]));
-    setState(() {
-      locationGeo =
-          "${placemarks[0].street!}, ${placemarks[0].subLocality} ${placemarks[0].locality} ${placemarks[0].administrativeArea} ${placemarks[0].country}";
-    });
+  Future<void> _getPlaceName(cords) async {
+    try {
+      if (cords != null) {
+        var cords__ = cords.toString().split(",");
+        List<Placemark> placemarks = await placemarkFromCoordinates(
+            double.parse(cords__[0]), double.parse(cords__[1]));
+        setState(() {
+          locationGeo =
+              "${placemarks[0].street!}, ${placemarks[0].subLocality} ${placemarks[0].locality} ${placemarks[0].administrativeArea} ${placemarks[0].country}";
+          loading = false;
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    _fetchToken();
-    _getPlaceName();
     user = widget.user as User;
     token = widget.token as String;
+    _fetchToken().then((value) {});
   }
 
   @override
@@ -192,12 +206,15 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text("Good Morning"),
-                            Text(
-                              "${user.fullname}",
-                              style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colours.mainColor),
+                            Skeletonizer(
+                              enabled: loading,
+                              child: Text(
+                                "${user.fullname}",
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colours.mainColor),
+                              ),
                             ),
                             const SizedBox(
                               height: 30,
@@ -209,9 +226,14 @@ class _HomePageState extends State<HomePage> {
                                   size: 13,
                                   color: Colours.mainColor,
                                 ),
-                                Text(
-                                  locationGeo,
-                                  style: const TextStyle(fontSize: 11),
+                                Skeletonizer(
+                                  enabled: loading,
+                                  child: locationGeo != ''
+                                      ? Text(
+                                          locationGeo,
+                                          style: const TextStyle(fontSize: 11),
+                                        )
+                                      : const Text("Fetching"),
                                 ),
                               ],
                             )

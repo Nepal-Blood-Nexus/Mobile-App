@@ -22,10 +22,10 @@ class MoreOptionPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           GestureDetector(
-            onTap: () {
-              storage.delete(key: "token");
-              storage.delete(key: "user");
-              Navigator.pushNamed(context, Routes.login);
+            onTap: () async {
+              storage.deleteAll().then((value) {
+                Navigator.pushNamed(context, Routes.login);
+              });
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),

@@ -13,11 +13,11 @@ Future saveLocation(location, fcmtoken) async {
     var res = await http.post(url,
         body: {"cordinates": location, "notification_token": fcmtoken},
         headers: {"authorization": "Bearer $token"});
-    if (res.statusCode != 401) {
+    if (res.statusCode == 201) {
       var response = jsonDecode(res.body);
       await storage.write(key: "fcmToken", value: fcmtoken);
       await storage.write(key: "cords", value: location);
-
+      print("save cords in local");
       return response;
     }
   }

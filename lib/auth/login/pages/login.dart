@@ -69,7 +69,9 @@ class LoginPage extends StatelessWidget {
       var res = await attemptSignUp(email, phone, password);
       return res;
     } catch (e) {
-      if (e.toString() != '') {}
+      if (e.toString() != '') {
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -122,6 +124,7 @@ class LoginPage extends StatelessWidget {
                 onTap: () {
                   showLoading(context);
                   _register().then((value) {
+                    print(value);
                     var response = jsonDecode(value);
                     if (response["success"] == false) {
                       displayDialog(context, "Failed", response["error"]);

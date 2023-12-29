@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nepal_blood_nexus/utils/colours.dart';
 import 'package:nepal_blood_nexus/utils/routes.dart';
 import 'package:onboarding/onboarding.dart';
+import 'package:lottie/lottie.dart';
 
 class OnboardPage extends StatefulWidget {
   const OnboardPage({super.key});
@@ -22,9 +23,14 @@ class _OnboardPageState extends State<OnboardPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: Image.asset(
-                  "assets/images/bg_icon_1.png",
-                  width: 180,
+                child: Container(
+                  child: Lottie.asset(
+                    'assets/images/screen_1.json',
+                    // fit: BoxFit.contain,
+                    width: 400,
+                    height: 250,
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
               const Expanded(
@@ -34,6 +40,7 @@ class _OnboardPageState extends State<OnboardPage> {
                     children: [
                       Text(
                         "Find Blood Donors",
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 30,
                             color: Color.fromARGB(255, 255, 255, 255)),
@@ -42,7 +49,7 @@ class _OnboardPageState extends State<OnboardPage> {
                         height: 40,
                       ),
                       Text(
-                        "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
+                        "Discover nearby donors and connect in real-time for immediate blood support.",
                         style: TextStyle(
                             color: Colours.white,
                             fontSize: 17,
@@ -65,9 +72,14 @@ class _OnboardPageState extends State<OnboardPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: Image.asset(
-                  "assets/images/bg_icon_1.png",
-                  width: 180,
+                child: Container(
+                  child: Lottie.asset(
+                    'assets/images/bloodtest.json',
+                    // fit: BoxFit.contain,
+                    width: 400,
+                    height: 250,
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
               const Expanded(
@@ -77,6 +89,7 @@ class _OnboardPageState extends State<OnboardPage> {
                     children: [
                       Text(
                         "Valuable Blood Insights",
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 30,
                             color: Color.fromARGB(255, 255, 255, 255)),
@@ -85,7 +98,8 @@ class _OnboardPageState extends State<OnboardPage> {
                         height: 40,
                       ),
                       Text(
-                        "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
+                        textAlign: TextAlign.center,
+                        "Access essential information about blood types, donation centers, and ongoing programs.",
                         style: TextStyle(
                             color: Colours.white,
                             fontSize: 17,
@@ -108,9 +122,14 @@ class _OnboardPageState extends State<OnboardPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: Image.asset(
-                  "assets/images/bg_icon_1.png",
-                  width: 180,
+                child: Container(
+                  child: Lottie.asset(
+                    'assets/images/screen3.json',
+                    // fit: BoxFit.contain,
+                    width: 400,
+                    height: 250,
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
               const Expanded(
@@ -120,6 +139,7 @@ class _OnboardPageState extends State<OnboardPage> {
                     children: [
                       Text(
                         "BE A PART OF COMMUNITY",
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 30,
                             color: Color.fromARGB(255, 255, 255, 255)),
@@ -128,7 +148,8 @@ class _OnboardPageState extends State<OnboardPage> {
                         height: 40,
                       ),
                       Text(
-                        "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
+                        "Join a supportive community, add friends with the same blood type, and participate in group activities.",
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colours.white,
                             fontSize: 17,

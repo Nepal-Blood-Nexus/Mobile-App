@@ -54,12 +54,12 @@ dependencies:
   skeletonizer: ^0.8.0
 
 flutter_native_splash:
-  color: "#AD2831"
+  color: "#DE0A1E"
   image: assets/images/splash.png
   android_12:
-    color: "#AD2831"
+    color: "#DE0A1E"
     image: assets/images/splash.png
-    icon_background_color: "#AD2831"
+    icon_background_color: "#DE0A1E"
 
 dev_dependencies:
   flutter_test:

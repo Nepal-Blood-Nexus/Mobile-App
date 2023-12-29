@@ -21,10 +21,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: const FirebaseOptions(
-        apiKey: "AIzaSyALNkDBRIvBYeOse10eXW-scLwJL6UfJMA",
-        appId: "1:757885051557:android:002463bb1bb3436b34a34c",
-        messagingSenderId: "757885051557",
-        projectId: "nepal-blood-nexus"),
+      apiKey: "AIzaSyALNkDBRIvBYeOse10eXW-scLwJL6UfJMA",
+      appId: "1:757885051557:android:002463bb1bb3436b34a34c",
+      messagingSenderId: "757885051557",
+      projectId: "nepal-blood-nexus",
+    ),
   );
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
@@ -84,6 +85,7 @@ class _MyAppState extends State<MyApp> {
               })
             });
         FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+          // this need to pushed on device
           print('Message data: ${message.data}');
           if (message.notification != null) {
             print(

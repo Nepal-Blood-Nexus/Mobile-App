@@ -60,7 +60,7 @@ class _BloodRequestPageState extends State<BloodRequestPage> {
       });
       if (res.statusCode == 200) {
         var response = jsonDecode(res.body);
-        print(response);
+        debugPrint(response.toString());
         return response["donors"];
       } else {
         setState(() {
@@ -155,7 +155,7 @@ class _BloodRequestPageState extends State<BloodRequestPage> {
                     sendBloodRequest(true).then((value) {
                       if (value != false) {
                         List<Donors> donors_ = convertJsonToDonors(value);
-                        print(donors_);
+                        debugPrint(donors_.toString());
                         setState(() {
                           loading = false;
                           donors = donors_;

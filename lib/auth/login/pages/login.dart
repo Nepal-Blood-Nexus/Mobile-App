@@ -124,7 +124,7 @@ class LoginPage extends StatelessWidget {
                 onTap: () {
                   showLoading(context);
                   _register().then((value) {
-                    print(value);
+                    debugPrint(value.toString());
                     var response = jsonDecode(value);
                     if (response["success"] == false) {
                       displayDialog(context, "Failed", response["error"]);

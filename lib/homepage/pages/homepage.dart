@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         loading = true;
       });
-      print("fetch token in homepage");
+      debugPrint("fetch token in homepage");
       String? storedToken = await storage.read(key: 'token');
 
       await messaging.requestPermission(
@@ -70,10 +70,10 @@ class _HomePageState extends State<HomePage> {
               }),
             });
         FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-          print('Got a message whilst in the foreground!');
-          print('Message data: ${message.data}');
+          debugPrint('Got a message whilst in the foreground!');
+          debugPrint('Message data: ${message.data}');
           if (message.notification != null) {
-            print(
+            debugPrint(
                 'Message also contained a notification: ${message.notification}');
           }
         });
@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                 desiredAccuracy: LocationAccuracy.best,
                 forceAndroidLocationManager: true)
             .then((Position position) {
-          print("saving cords");
+          debugPrint("saving cords");
           saveLocation("${position.latitude},${position.longitude}", fcmToken)
               .then((response) async {
             if (response != null) {
@@ -139,7 +139,7 @@ class _HomePageState extends State<HomePage> {
         });
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 

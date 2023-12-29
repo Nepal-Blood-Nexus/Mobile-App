@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,7 +18,7 @@ Future saveLocation(location, fcmtoken) async {
       var response = jsonDecode(res.body);
       await storage.write(key: "fcmToken", value: fcmtoken);
       await storage.write(key: "cords", value: location);
-      print("save cords in local");
+      debugPrint("save cords in local");
       return response;
     }
   }

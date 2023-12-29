@@ -180,7 +180,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               children: [
                                 Text(
                                   widget.user.profile![0]["rbc"] ?? "__",
-                                  style: TextStyle(color: Colours.white),
+                                  style: const TextStyle(color: Colours.white),
                                 ),
                                 const Text(
                                   "Last Donated",
@@ -199,7 +199,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               children: [
                                 Text(
                                   widget.user.profile![0]["wbc"] ?? "__",
-                                  style: TextStyle(color: Colours.white),
+                                  style: const TextStyle(color: Colours.white),
                                 ),
                                 const Text(
                                   "WBC Count",
@@ -245,7 +245,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     FormBuilderRadioGroup(
                                       name: "gender",
                                       onChanged: (value) {
-                                        print(value);
+                                        debugPrint(value.toString());
                                         setState(() {
                                           formData["gender"] = value!;
                                         });

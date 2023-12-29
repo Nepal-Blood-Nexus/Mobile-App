@@ -14,7 +14,7 @@ import 'package:nepal_blood_nexus/utils/routes.dart';
 import 'package:nepal_blood_nexus/widgets/loading.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print("Handling a background message: ${message.messageId}");
+  debugPrint("Handling a background message: ${message.messageId}");
 }
 
 void main() async {
@@ -78,17 +78,17 @@ class _MyAppState extends State<MyApp> {
         });
         LocationPermission permission;
         FirebaseMessaging.instance.getToken().then((value) => {
-              print("FCM Token Is: "),
-              print(value),
+              debugPrint("FCM Token Is: "),
+              debugPrint(value),
               setState(() {
                 fcmToken = value as String;
               })
             });
         FirebaseMessaging.onMessage.listen((RemoteMessage message) {
           // this need to pushed on device
-          print('Message data: ${message.data}');
+          debugPrint('Message data: ${message.data}');
           if (message.notification != null) {
-            print(
+            debugPrint(
                 'Message also contained a notification: ${message.notification?.title} ${message.notification?.body}');
             // setState(() {
             //   notifTitle = message.notification!.title;

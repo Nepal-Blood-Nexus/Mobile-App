@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -12,13 +13,32 @@ import 'package:nepal_blood_nexus/repository/user_repo.dart';
 import 'package:nepal_blood_nexus/utils/models/user.dart';
 import 'package:nepal_blood_nexus/utils/routes.dart';
 import 'package:nepal_blood_nexus/widgets/loading.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  debugPrint("Handling a background message: ${message.messageId}");
+  debugPrint("Handling a background message: ${message.toString()}");
 }
+
+FlutterLocalNotificationsPlugin notificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  AndroidInitializationSettings androidInitializationSettings =
+      const AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  DarwinInitializationSettings darwinInitializationSettings =
+      const DarwinInitializationSettings();
+
+  InitializationSettings initializationSettings = InitializationSettings(
+    android: androidInitializationSettings,
+    iOS: darwinInitializationSettings,
+  );
+
+  bool? initialized =
+      await notificationsPlugin.initialize(initializationSettings);
+  debugPrint("notification intialized $initialized");
+
   await Firebase.initializeApp(
     options: const FirebaseOptions(
       apiKey: "AIzaSyALNkDBRIvBYeOse10eXW-scLwJL6UfJMA",
@@ -58,6 +78,30 @@ class _MyAppState extends State<MyApp> {
     Navigator.pushNamedAndRemoveUntil(context, Routes.login, (route) => false);
   }
 
+  void showNotification(id, title, body) async {
+    AndroidNotificationDetails androidNotificationDetails =
+        const AndroidNotificationDetails(
+      "channelId",
+      "channelName",
+      priority: Priority.high,
+      importance: Importance.max,
+    );
+
+    DarwinNotificationDetails darwinNotificationDetails =
+        const DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+    );
+
+    NotificationDetails notificationDetails = NotificationDetails(
+      android: androidNotificationDetails,
+      iOS: darwinNotificationDetails,
+    );
+
+    await notificationsPlugin.show(id, title, body, notificationDetails);
+  }
+
   Future<void> _fetchToken() async {
     try {
       String? storedToken = await storage.read(key: 'token');
@@ -86,14 +130,12 @@ class _MyAppState extends State<MyApp> {
             });
         FirebaseMessaging.onMessage.listen((RemoteMessage message) {
           // this need to pushed on device
-          debugPrint('Message data: ${message.data}');
+          // debugPrint('Message data: ${message}');
           if (message.notification != null) {
+            showNotification(message.notification?.title.toString(),
+                message.notification?.title, message.notification?.title);
             debugPrint(
                 'Message also contained a notification: ${message.notification?.title} ${message.notification?.body}');
-            // setState(() {
-            //   notifTitle = message.notification!.title;
-            //   notifBody = message.notification!.body;
-            // });
           }
         });
 

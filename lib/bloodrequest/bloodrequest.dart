@@ -127,62 +127,41 @@ class _BloodRequestPageState extends State<BloodRequestPage> {
           ))
         ],
       ),
-      body: loading
-          ? const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Center(
-                  child: SizedBox(
-                    width: 60,
-                    height: 60,
-                    child: LoadingIndicator(
-                      indicatorType: Indicator.circleStrokeSpin,
-                      strokeWidth: 7,
-                      colors: [Colours.mainColor],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text("Searching for nearby donors")
-              ],
-            )
-          : noDonors
-              ? ButtonV1(
-                  onTap: () {
-                    sendBloodRequest(true).then((value) {
-                      if (value != false) {
-                        List<Donors> donors_ = convertJsonToDonors(value);
-                        debugPrint(donors_.toString());
-                        setState(() {
-                          loading = false;
-                          donors = donors_;
-                        });
-                      }
+      body: noDonors
+          ? ButtonV1(
+              onTap: () {
+                sendBloodRequest(true).then((value) {
+                  if (value != false) {
+                    List<Donors> donors_ = convertJsonToDonors(value);
+                    debugPrint(donors_.toString());
+                    setState(() {
+                      loading = false;
+                      donors = donors_;
                     });
-                  },
-                  text: "Click to try Again without gender filter")
-              : Skeletonizer(
-                  enabled: loading,
-                  child: ListView.builder(
-                    itemCount: donors.length,
-                    itemBuilder: (context, index) {
-                      return DonorCard(
-                        fullname: donors[index].fullname,
-                        age: donors[index].age,
-                        weight: donors[index].weight,
-                        distanceFromPreferedLocation:
-                            donors[index].distanceFromPreferedLocation,
-                        distanceFromUserLocation:
-                            donors[index].distanceFromuserLocation,
-                        donorId: donors[index].donorId,
-                        phone: donors[index].phone,
-                      );
-                    },
-                  ),
-                ),
+                  }
+                });
+              },
+              text: "Click to try Again without gender filter",
+            )
+          : Skeletonizer(
+              enabled: loading,
+              child: ListView.builder(
+                itemCount: donors.length,
+                itemBuilder: (context, index) {
+                  return DonorCard(
+                    fullname: donors[index].fullname,
+                    age: donors[index].age,
+                    weight: donors[index].weight,
+                    distanceFromPreferedLocation:
+                        donors[index].distanceFromPreferedLocation,
+                    distanceFromUserLocation:
+                        donors[index].distanceFromuserLocation,
+                    donorId: donors[index].donorId,
+                    phone: donors[index].phone,
+                  );
+                },
+              ),
+            ),
     );
   }
 }
@@ -202,7 +181,16 @@ Widget DonorCard({
     child: ListTile(
       enabled: true,
       contentPadding: const EdgeInsets.all(18.0),
-      title: Text(fullname),
+      title: Text(
+        fullname.toString().toUpperCase(),
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          letterSpacing: 2,
+          fontSize: 20,
+          color: Colours.mainColor,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

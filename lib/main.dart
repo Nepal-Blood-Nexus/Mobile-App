@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:math';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +14,35 @@ import 'package:nepal_blood_nexus/utils/routes.dart';
 import 'package:nepal_blood_nexus/widgets/loading.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+void showNotification(id, title, body) async {
+  AndroidNotificationDetails androidNotificationDetails =
+      const AndroidNotificationDetails(
+    "channelId",
+    "channelName",
+    priority: Priority.high,
+    importance: Importance.max,
+  );
+
+  DarwinNotificationDetails darwinNotificationDetails =
+      const DarwinNotificationDetails(
+    presentAlert: true,
+    presentBadge: true,
+    presentSound: true,
+  );
+
+  NotificationDetails notificationDetails = NotificationDetails(
+    android: androidNotificationDetails,
+    iOS: darwinNotificationDetails,
+  );
+
+  await notificationsPlugin.show(id, title, body, notificationDetails);
+}
+
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  debugPrint("Handling a background message: ${message.toString()}");
+  if (message.notification != null) {
+    // showNotification(Random(1).nextInt(6), "${message.notification?.title}",
+    //     message.notification?.body);
+  }
 }
 
 FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -47,7 +73,6 @@ void main() async {
       projectId: "nepal-blood-nexus",
     ),
   );
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   runApp(const MyApp());
 }
@@ -72,34 +97,18 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _fetchToken();
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      // this need to pushed on device
+      if (message.notification != null) {
+        showNotification(Random(1).nextInt(6),
+            "F: ${message.notification?.title}", message.notification?.title);
+      }
+    });
   }
 
   void redirectToLogin() {
     Navigator.pushNamedAndRemoveUntil(context, Routes.login, (route) => false);
-  }
-
-  void showNotification(id, title, body) async {
-    AndroidNotificationDetails androidNotificationDetails =
-        const AndroidNotificationDetails(
-      "channelId",
-      "channelName",
-      priority: Priority.high,
-      importance: Importance.max,
-    );
-
-    DarwinNotificationDetails darwinNotificationDetails =
-        const DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-    );
-
-    NotificationDetails notificationDetails = NotificationDetails(
-      android: androidNotificationDetails,
-      iOS: darwinNotificationDetails,
-    );
-
-    await notificationsPlugin.show(id, title, body, notificationDetails);
   }
 
   Future<void> _fetchToken() async {
@@ -128,16 +137,6 @@ class _MyAppState extends State<MyApp> {
                 fcmToken = value as String;
               })
             });
-        FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-          // this need to pushed on device
-          // debugPrint('Message data: ${message}');
-          if (message.notification != null) {
-            showNotification(message.notification?.title.toString(),
-                message.notification?.title, message.notification?.title);
-            debugPrint(
-                'Message also contained a notification: ${message.notification?.title} ${message.notification?.body}');
-          }
-        });
 
         permission = await Geolocator.checkPermission();
         if (permission == LocationPermission.denied) {

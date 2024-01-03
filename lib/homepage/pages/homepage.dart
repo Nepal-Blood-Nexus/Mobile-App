@@ -8,10 +8,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:nepal_blood_nexus/homepage/screens/profile.dart';
 import 'package:nepal_blood_nexus/repository/user_repo.dart';
 import 'package:nepal_blood_nexus/utils/colours.dart';
+import 'package:nepal_blood_nexus/utils/models/request.dart';
 import 'package:nepal_blood_nexus/utils/models/user.dart';
 import 'package:nepal_blood_nexus/utils/routes.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, this.user, this.token});
@@ -32,6 +34,12 @@ class _HomePageState extends State<HomePage> {
   User user = User();
   String token = "";
   bool loading = false;
+  List<BloodRequest> bloodRequest = [];
+
+  List<BloodRequest> convertJsonToList(List<dynamic> jsonList) {
+    return jsonList.map((json) => BloodRequest.fromJson(json)).toList();
+  }
+
   // String placeName = "";
 
   int _selectedIndex = 2;
@@ -143,12 +151,27 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<void> _getBloodRequest() async {
+    var url = Uri.https('nbn-server.onrender.com', 'api/request/get');
+    var res = await http.get(url, headers: {"authorization": "Bearer $token"});
+    if (res.statusCode == 200) {
+      var response = jsonDecode(res.body);
+      List<BloodRequest> blood_requests = convertJsonToList(response);
+      debugPrint("get blood request in home screen");
+      setState(() {
+        bloodRequest = blood_requests;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     user = widget.user as User;
     token = widget.token as String;
-    _fetchToken().then((value) {});
+    _fetchToken().then((value) {
+      _getBloodRequest();
+    });
   }
 
   @override
@@ -162,7 +185,12 @@ class _HomePageState extends State<HomePage> {
         'Index 2: Home',
         style: optionStyle,
       ),
-      ProfileScreen(user: user, currentLocation: locationGeo),
+      ProfileScreen(
+        loading: loading,
+        user: user,
+        currentLocation: locationGeo,
+        bloodRequest: bloodRequest,
+      ),
       const Text(
         'Index 4: Requests',
         style: optionStyle,

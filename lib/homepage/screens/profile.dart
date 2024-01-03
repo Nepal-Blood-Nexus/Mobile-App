@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:nepal_blood_nexus/utils/colours.dart';
+import 'package:nepal_blood_nexus/utils/models/request.dart';
 import 'package:nepal_blood_nexus/utils/models/user.dart';
 import 'package:nepal_blood_nexus/utils/routes.dart';
 import 'package:nepal_blood_nexus/widgets/button_v1.dart';
@@ -12,9 +13,15 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen(
-      {super.key, required this.user, required this.currentLocation});
+      {super.key,
+      required this.user,
+      required this.currentLocation,
+      required this.bloodRequest,
+      required this.loading});
   final User user;
   final String currentLocation;
+  final List<BloodRequest> bloodRequest;
+  final bool loading;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -24,7 +31,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // The query currently being searched for. If null, there is no pending
   // request.
   String? _searchingWithQuery;
-  bool loading = true;
   bool showHintTextInput = false;
   final _formKey = GlobalKey<FormBuilderState>();
   late Map<String, dynamic> formData = {
@@ -38,14 +44,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // The most recent options received from the API.
   late Iterable<String> _lastOptions = <String>[];
 
-  Future setLoadingOff() async {
-    return await Future.delayed(const Duration(seconds: 4), () {
-      setState(() {
-        loading = false;
-      });
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -53,7 +51,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       formData["cordinates"] = widget.user.last_location;
     });
-    setLoadingOff();
   }
 
   @override
@@ -91,7 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   text:
                       "Set up your profile to get insights about your blood. Click Here to setup")
               : Skeletonizer(
-                  enabled: loading,
+                  enabled: widget.loading,
                   child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

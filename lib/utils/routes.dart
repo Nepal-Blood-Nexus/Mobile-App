@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:nepal_blood_nexus/auth/login/pages/login.dart';
 import 'package:nepal_blood_nexus/auth/register/pages/register.dart';
 import 'package:nepal_blood_nexus/bloodrequest/bloodrequest.dart';
+import 'package:nepal_blood_nexus/bloodrequest/donateblood.dart';
 import 'package:nepal_blood_nexus/homepage/pages/homepage.dart';
 import 'package:nepal_blood_nexus/homepage/screens/setup.dart';
 import 'package:nepal_blood_nexus/more/more_option.dart';
 import 'package:nepal_blood_nexus/onboard/pages/onboard.dart';
+import 'package:nepal_blood_nexus/utils/models/request.dart';
 import 'package:page_transition/page_transition.dart';
 
 class Routes {
@@ -16,6 +18,7 @@ class Routes {
   static const String register = 'register';
   static const String more = 'more';
   static const String bloodrequest = 'bloodrequest';
+  static const String donateblood = 'donateblood';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -55,6 +58,15 @@ class Routes {
         final Map user = settings.arguments as Map;
         return PageTransition(
           child: ProfileSetupScreen(user: user["user"]),
+          type: PageTransitionType.fade,
+          duration: const Duration(milliseconds: 500),
+        );
+      case donateblood:
+        final BloodRequest _bloodRequest = settings.arguments as BloodRequest;
+        return PageTransition(
+          child: DonateBloodPage(
+            bloodRequest: _bloodRequest,
+          ),
           type: PageTransitionType.fade,
           duration: const Duration(milliseconds: 500),
         );

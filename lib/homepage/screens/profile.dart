@@ -12,15 +12,14 @@ import 'package:http/http.dart' as http;
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen(
-      {super.key,
-      required this.user,
-      required this.currentLocation,
-      required this.bloodRequest,
-      required this.loading});
+  const ProfileScreen({
+    super.key,
+    required this.user,
+    required this.currentLocation,
+    required this.loading,
+  });
   final User user;
   final String currentLocation;
-  final List<BloodRequest> bloodRequest;
   final bool loading;
 
   @override
@@ -373,7 +372,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 text: "Request Blood")
             : const SizedBox(
                 height: 0,
-              )
+              ),
+        const SizedBox(
+          height: 20,
+        ),
       ],
     );
   }

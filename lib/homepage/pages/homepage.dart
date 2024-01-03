@@ -5,15 +5,16 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
+
+import 'package:nepal_blood_nexus/homepage/screens/blood_request.dart';
 import 'package:nepal_blood_nexus/homepage/screens/profile.dart';
 import 'package:nepal_blood_nexus/repository/user_repo.dart';
 import 'package:nepal_blood_nexus/utils/colours.dart';
-import 'package:nepal_blood_nexus/utils/models/request.dart';
 import 'package:nepal_blood_nexus/utils/models/user.dart';
 import 'package:nepal_blood_nexus/utils/routes.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:http/http.dart' as http;
+import 'package:animated_icon/animated_icon.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, this.user, this.token});
@@ -34,11 +35,6 @@ class _HomePageState extends State<HomePage> {
   User user = User();
   String token = "";
   bool loading = false;
-  List<BloodRequest> bloodRequest = [];
-
-  List<BloodRequest> convertJsonToList(List<dynamic> jsonList) {
-    return jsonList.map((json) => BloodRequest.fromJson(json)).toList();
-  }
 
   // String placeName = "";
 
@@ -151,27 +147,12 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> _getBloodRequest() async {
-    var url = Uri.https('nbn-server.onrender.com', 'api/request/get');
-    var res = await http.get(url, headers: {"authorization": "Bearer $token"});
-    if (res.statusCode == 200) {
-      var response = jsonDecode(res.body);
-      List<BloodRequest> blood_requests = convertJsonToList(response);
-      debugPrint("get blood request in home screen");
-      setState(() {
-        bloodRequest = blood_requests;
-      });
-    }
-  }
-
   @override
   void initState() {
     super.initState();
     user = widget.user as User;
     token = widget.token as String;
-    _fetchToken().then((value) {
-      _getBloodRequest();
-    });
+    _fetchToken().then((value) {});
   }
 
   @override
@@ -185,34 +166,99 @@ class _HomePageState extends State<HomePage> {
         'Index 2: Home',
         style: optionStyle,
       ),
-      ProfileScreen(
-        loading: loading,
-        user: user,
-        currentLocation: locationGeo,
-        bloodRequest: bloodRequest,
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ProfileScreen(
+            loading: loading,
+            user: user,
+            currentLocation: locationGeo,
+          ),
+          Container(
+            color: const Color.fromARGB(95, 255, 255, 255),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 20,
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          const Text(
+                            "Blood Request",
+                            style: TextStyle(
+                              color: Colours.mainColor,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 6,
+                          ),
+                          AnimateIcon(
+                            onTap: () {},
+                            iconType: IconType.continueAnimation,
+                            height: 16,
+                            width: 16,
+                            color: Colours.mainColor,
+                            animateIcon: AnimateIcons.loading5,
+                          )
+                        ],
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          _onItemTapped(3);
+                        },
+                        child: const Row(
+                          children: [
+                            Text(
+                              "view all",
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                            Icon(Icons.chevron_right)
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  BloodRequestScreen(
+                    token: token,
+                    itemCount: 3,
+                  ),
+                ],
+              ),
+            ),
+          )
+        ],
       ),
-      const Text(
-        'Index 4: Requests',
-        style: optionStyle,
+      BloodRequestScreen(
+        token: token,
+        itemCount: 100,
       ),
       const Text(
         'Index 4: Requests',
         style: optionStyle,
       ),
     ];
+
     return Scaffold(
       backgroundColor: Colours.white,
       bottomNavigationBar: CurvedNavigationBar(
         index: _selectedIndex,
         color: Colours.mainColor,
-        backgroundColor: Colours.white,
+        backgroundColor: Colors.transparent,
         animationDuration: const Duration(milliseconds: 300),
         height: 50,
         items: const <Widget>[
           Icon(Icons.insights, color: Colours.white),
           Icon(Icons.notifications, color: Colours.white),
           Icon(Icons.home_filled, color: Colours.white),
-          Icon(Icons.school, color: Colours.white),
+          Icon(Icons.health_and_safety_rounded, color: Colours.white),
           Icon(Icons.school, color: Colours.white),
         ],
         onTap: _onItemTapped,

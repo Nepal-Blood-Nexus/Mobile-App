@@ -54,6 +54,8 @@ dependencies:
   skeletonizer: ^0.8.0
   flutter_local_notifications: ^16.3.0
   flutter_timezone: ^1.0.8
+  sliver_tools: ^0.2.12
+  animated_icon: ^0.0.5
 
 flutter_native_splash:
   color: "#DE0A1E"

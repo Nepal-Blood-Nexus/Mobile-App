@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 import 'package:nepal_blood_nexus/utils/colours.dart';
 import 'package:nepal_blood_nexus/utils/models/donors.dart';
 import 'package:nepal_blood_nexus/utils/models/user.dart';

@@ -67,7 +67,6 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
                 )
               : const Row()).toList(),
     );
-    ;
   }
 }
 

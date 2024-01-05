@@ -102,6 +102,7 @@ class _HomePageState extends State<HomePage> {
           debugPrint("saving cords");
           saveLocation("${position.latitude},${position.longitude}", fcmToken)
               .then((response) async {
+            print(response["user"]);
             if (response != null) {
               storage.write(key: "user", value: jsonEncode(response["user"]));
               storage.write(key: "token", value: response["token"]);
@@ -226,10 +227,15 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  BloodRequestScreen(
-                    token: token,
-                    itemCount: 3,
-                  ),
+                  cords != ""
+                      ? Skeletonizer(
+                          enabled: loading,
+                          child: BloodRequestScreen(
+                            token: token,
+                            itemCount: 3,
+                          ),
+                        )
+                      : Row(),
                 ],
               ),
             ),

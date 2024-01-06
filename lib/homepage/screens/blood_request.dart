@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:nepal_blood_nexus/utils/colours.dart';
 import 'package:nepal_blood_nexus/utils/models/request.dart';
 import 'package:http/http.dart' as http;
@@ -8,18 +9,22 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 class BloodRequestScreen extends StatefulWidget {
   const BloodRequestScreen(
-      {super.key, required this.token, required this.itemCount});
+      {super.key, required this.token, required this.itemCount, this.screen});
   final String token;
   final int itemCount;
+  final String? screen;
 
   @override
   State<BloodRequestScreen> createState() => _BloodRequestScreenState();
 }
 
+const storage = FlutterSecureStorage();
+
 class _BloodRequestScreenState extends State<BloodRequestScreen> {
   List<BloodRequest> bloodRequest =
       List.filled(5, BloodRequest(), growable: true);
   bool loading = true;
+  String cords = "";
 
   List<BloodRequest> convertJsonToList(List<dynamic> jsonList) {
     return jsonList.map((json) => BloodRequest.fromJson(json)).toList();
@@ -34,6 +39,8 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
       List<BloodRequest> blood_requests = convertJsonToList(response);
 
       debugPrint("get blood request in home screen");
+      debugPrint("get user cordinates in home screen");
+
       setState(() {
         loading = false;
         bloodRequest = blood_requests;
@@ -49,23 +56,45 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: List.generate(
-          bloodRequest.length,
-          (index) => index < widget.itemCount
-              ? DonorCard(
-                  context: context,
-                  fullname: bloodRequest[index].initiator?.fullname,
-                  bloodgroup: bloodRequest[index].bloodGroup,
-                  location: bloodRequest[index].location,
-                  time: getDiff(bloodRequest[index].cdate),
-                  loading: loading,
-                  request: bloodRequest[index],
-                )
-              : const Row()).toList(),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              ButtonBar(
+                children: [
+                  GestureDetector(
+                    child: Text("All"),
+                  ),
+                  GestureDetector(
+                    child: Text("My Requests"),
+                  ),
+                ],
+              )
+            ],
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: List.generate(
+                bloodRequest.length,
+                (index) => index < widget.itemCount
+                    ? DonorCard(
+                        context: context,
+                        fullname: bloodRequest[index].initiator?.fullname,
+                        bloodgroup: bloodRequest[index].bloodGroup,
+                        location: bloodRequest[index].location,
+                        time: getDiff(bloodRequest[index].cdate),
+                        loading: loading,
+                        request: bloodRequest[index],
+                        cords: cords,
+                      )
+                    : const Row()).toList(),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -104,12 +133,12 @@ String getDiff(date) {
 }
 
 Widget DonorCard(
-    {fullname, bloodgroup, location, time, loading, context, request}) {
+    {fullname, bloodgroup, location, time, loading, context, request, cords}) {
   return Skeletonizer(
       enabled: loading,
       child: Card(
         elevation: 0,
-        color: Color.fromARGB(255, 236, 236, 237),
+        color: loading ? Colours.white : Color.fromARGB(255, 236, 236, 237),
         margin: const EdgeInsets.symmetric(vertical: 10),
         child: ListTile(
           enabled: true,

@@ -1,9 +1,12 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-double calculateDistance(String userLocation, String destination) {
-  List<String> userCoords = userLocation.split(",");
+const storage = FlutterSecureStorage();
+
+Future<double> calculateDistance(String destination) async {
+  String? userLocation = await storage.read(key: "cords");
+  List<String> userCoords = userLocation!.split(",");
   List<String> destCoords = destination.split(",");
 
   double userLatitude = double.parse(userCoords[0]) * (pi / 180);
@@ -21,12 +24,4 @@ double calculateDistance(String userLocation, String destination) {
   double earthRadius = 6371;
   // Calculate the result
   return (c * earthRadius).roundToDouble();
-}
-
-void main() {
-  String userLocation = "27.738112,85.3016576";
-  String destination = "28.704060,77.102493";
-
-  double distance = calculateDistance(userLocation, destination);
-  debugPrint("Distance: $distance km");
 }

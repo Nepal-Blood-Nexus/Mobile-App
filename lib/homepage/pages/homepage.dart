@@ -242,9 +242,13 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      BloodRequestScreen(
-        token: token,
-        itemCount: 100,
+      Column(
+        children: [
+          BloodRequestScreen(
+            token: token,
+            itemCount: 100,
+          ),
+        ],
       ),
       const Text(
         'Index 4: Requests',

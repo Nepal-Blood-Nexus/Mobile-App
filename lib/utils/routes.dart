@@ -64,7 +64,7 @@ class Routes {
       case donateblood:
         final BloodRequest _bloodRequest = settings.arguments as BloodRequest;
         return PageTransition(
-          child: DonateBloodPage(
+          child: DonateScreen(
             bloodRequest: _bloodRequest,
           ),
           type: PageTransitionType.fade,

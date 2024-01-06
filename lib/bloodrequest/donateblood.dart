@@ -1,137 +1,138 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:nepal_blood_nexus/utils/colours.dart';
-import 'package:nepal_blood_nexus/utils/models/request.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:nepal_blood_nexus/utils/models/user.dart';
+import 'package:nepal_blood_nexus/utils/algo.dart';
+import 'package:nepal_blood_nexus/utils/colours.dart';
+import 'package:nepal_blood_nexus/utils/models/request.dart';
 
-class DonateBloodPage extends StatefulWidget {
-  const DonateBloodPage({super.key, required this.bloodRequest});
+class DonateScreen extends StatefulWidget {
+  const DonateScreen({super.key, required this.bloodRequest});
+
   final BloodRequest bloodRequest;
 
   @override
-  State<DonateBloodPage> createState() => _DonateBloodPageState();
+  State<DonateScreen> createState() => _DonateScreenState();
 }
 
-class _DonateBloodPageState extends State<DonateBloodPage> {
-  final storage = const FlutterSecureStorage();
-
-  User local = User();
-
-  Future<void> getCord() async {
-    String? user_ = await storage.read(key: "user");
-
-    if (user_ != "") {
-      User u = User.fromJson(jsonDecode(user_!));
-      setState(() {
-        local = u;
-      });
-    }
-  }
+class _DonateScreenState extends State<DonateScreen> {
+  double? distance = 0;
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    getCord();
+    calculateDistance(widget.bloodRequest.cordinates!).then((value) => {
+          setState(() {
+            distance = value;
+          })
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text("Donate blood to ${widget.bloodRequest.initiator?.fullname}"),
         backgroundColor: Colours.mainColor,
         foregroundColor: Colours.white,
+        title:
+            Text('Donate Blood to ${widget.bloodRequest.initiator!.fullname}'),
         actions: [
           IconButton(
-            onPressed: () {
-              print(widget.bloodRequest);
-            },
-            icon: const Icon(Icons.arrow_drop_down_circle_outlined),
-          )
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => showDialog(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                content: const Text(
+                    'Try to disable the location service, and you will see an '
+                    'indicator on the top of the map.'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            FlutterMap(
-              options: MapOptions(
-                initialCenter: LatLng(
-                    getLat(widget.bloodRequest.cordinates?.split(",")[0]),
-                    getLat(widget.bloodRequest.cordinates?.split(",")[1])),
-                maxZoom: 19,
-              ),
-              children: [
-                TileLayer(
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  maxZoom: 19,
-                ),
-                LocationMarkerLayer(
-                  position: LocationMarkerPosition(
-                      latitude:
-                          getLat(widget.bloodRequest.cordinates?.split(",")[0]),
-                      longitude:
-                          getLon(widget.bloodRequest.cordinates?.split(",")[1]),
-                      accuracy: 100),
-                  heading: LocationMarkerHeading(heading: 5, accuracy: 5),
-                  style: LocationMarkerStyle(
-                    markerDirection: MarkerDirection.top,
-                    markerSize: Size.square(40),
-                    accuracyCircleColor: Color.fromARGB(255, 249, 152, 162),
-                    headingSectorColor: Color.fromARGB(255, 237, 131, 142),
-                    marker: Container(
-                      child: CircleAvatar(
-                        child:
-                            Text(widget.bloodRequest.initiator!.fullname![0]),
+      body: FlutterMap(
+        options: MapOptions(
+          center: LatLng(
+              double.parse(widget.bloodRequest.cordinates!.split(",")[0]),
+              double.parse(widget.bloodRequest.cordinates!.split(",")[1])),
+          zoom: 12,
+          minZoom: 0,
+          maxZoom: 19,
+        ),
+        children: [
+          TileLayer(
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            userAgentPackageName:
+                'net.tlserver6y.flutter_map_location_marker.example',
+            maxZoom: 14,
+          ),
+          CurrentLocationLayer(
+            indicators: LocationMarkerIndicators(
+              serviceDisabled: Align(
+                alignment: Alignment.topCenter,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ColoredBox(
+                    color: Colors.white.withAlpha(0x80),
+                    child: const Padding(
+                      padding: EdgeInsets.all(4.0),
+                      child: Text(
+                        "Please turn on location service.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(height: 1.2),
                       ),
                     ),
                   ),
                 ),
-                LocationMarkerLayer(
-                  position: LocationMarkerPosition(
-                      latitude: getLat(local.last_location?.split(",")[0]),
-                      longitude: getLon(local.last_location?.split(",")[1]),
-                      accuracy: 100),
-                  heading: LocationMarkerHeading(heading: 5, accuracy: 5),
-                  style: LocationMarkerStyle(
-                    markerDirection: MarkerDirection.top,
-                    markerSize: Size.square(30),
-                    accuracyCircleColor: Color.fromARGB(255, 174, 249, 152),
-                    headingSectorColor: Color.fromARGB(255, 27, 207, 117),
-                    marker: CircleAvatar(
-                      child: Text(
-                          local.fullname != null ? local.fullname![0] : ""),
-                    ),
-                  ),
+              ),
+            ),
+          ),
+          LocationMarkerLayer(
+            position: LocationMarkerPosition(
+                latitude:
+                    double.parse(widget.bloodRequest.cordinates!.split(",")[0]),
+                longitude:
+                    double.parse(widget.bloodRequest.cordinates!.split(",")[1]),
+                accuracy: 100),
+            heading: LocationMarkerHeading(heading: 5, accuracy: 5),
+            style: LocationMarkerStyle(
+              markerDirection: MarkerDirection.top,
+              markerSize: Size.square(30),
+              accuracyCircleColor: Color.fromARGB(255, 249, 152, 162),
+              headingSectorColor: Color.fromARGB(255, 237, 131, 142),
+              marker: Container(
+                child: CircleAvatar(
+                  child: Text(widget.bloodRequest.initiator!.fullname![0]),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            color: Colours.white,
+            height: 60,
+            padding: EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("${widget.bloodRequest.initiator!.fullname}"),
+                    Text(
+                        "Blood Group: ${widget.bloodRequest.bloodGroup} ${distance}KM Away")
+                  ],
                 ),
               ],
             ),
-            Text("Donate Now")
-          ],
-        ),
+          )
+        ],
       ),
     );
-  }
-
-  double getLat(String? split) {
-    print(split);
-    if (split != null) {
-      return double.parse(split);
-    } else {
-      return double.minPositive;
-    }
-  }
-
-  double getLon(String? split) {
-    if (split != null) {
-      return double.parse(split);
-    } else {
-      return double.minPositive;
-    }
   }
 }

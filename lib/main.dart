@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nepal_blood_nexus/homepage/pages/homepage.dart';
 import 'package:nepal_blood_nexus/onboard/pages/onboard.dart';
 import 'package:nepal_blood_nexus/repository/user_repo.dart';
+import 'package:nepal_blood_nexus/services/service_locator.dart';
 import 'package:nepal_blood_nexus/utils/models/user.dart';
 import 'package:nepal_blood_nexus/utils/routes.dart';
 import 'package:nepal_blood_nexus/widgets/loading.dart';
@@ -73,6 +74,7 @@ void main() async {
       projectId: "nepal-blood-nexus",
     ),
   );
+  setupLocator();
 
   runApp(const MyApp());
 }
@@ -194,7 +196,7 @@ class _MyAppState extends State<MyApp> {
             fontSize: 20,
           ),
           bodyMedium: GoogleFonts.raleway(),
-          displaySmall: GoogleFonts.raleway(),
+          displaySmall: GoogleFonts.raleway(fontSize: 14),
         ),
       ),
       debugShowCheckedModeBanner: false,

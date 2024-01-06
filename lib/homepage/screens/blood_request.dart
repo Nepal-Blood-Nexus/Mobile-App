@@ -8,11 +8,17 @@ import 'package:nepal_blood_nexus/utils/routes.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class BloodRequestScreen extends StatefulWidget {
-  const BloodRequestScreen(
-      {super.key, required this.token, required this.itemCount, this.screen});
+  const BloodRequestScreen({
+    super.key,
+    required this.token,
+    required this.itemCount,
+    this.screen,
+    required this.userid,
+  });
   final String token;
   final int itemCount;
   final String? screen;
+  final String userid;
 
   @override
   State<BloodRequestScreen> createState() => _BloodRequestScreenState();
@@ -25,6 +31,7 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
       List.filled(5, BloodRequest(), growable: true);
   bool loading = true;
   String cords = "";
+  bool userRequest = false;
 
   List<BloodRequest> convertJsonToList(List<dynamic> jsonList) {
     return jsonList.map((json) => BloodRequest.fromJson(json)).toList();
@@ -55,32 +62,96 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    loading;
+    bloodRequest;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          Row(
-            children: [
-              ButtonBar(
-                children: [
-                  GestureDetector(
-                    child: Text("All"),
-                  ),
-                  GestureDetector(
-                    child: Text("My Requests"),
-                  ),
-                ],
-              )
-            ],
-          ),
+          widget.screen == "main"
+              ? Row(
+                  children: [
+                    ButtonBar(
+                      children: [
+                        GestureDetector(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(200),
+                              color: userRequest == false
+                                  ? Colours.mainColor
+                                  : null,
+                              border: Border.all(),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 5,
+                              horizontal: 15,
+                            ),
+                            child: Text(
+                              "All",
+                              style: TextStyle(
+                                  color: userRequest == false
+                                      ? Colours.white
+                                      : Colors.black),
+                            ),
+                          ),
+                          onTap: () {
+                            setState(() {
+                              userRequest = false;
+                            });
+                          },
+                        ),
+                        GestureDetector(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(200),
+                              color: userRequest == true
+                                  ? Colours.mainColor
+                                  : null,
+                              border: Border.all(),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 5,
+                              horizontal: 15,
+                            ),
+                            child: Text(
+                              "My Requests",
+                              style: TextStyle(
+                                  color: userRequest == true
+                                      ? Colours.white
+                                      : Colors.black),
+                            ),
+                          ),
+                          onTap: () {
+                            setState(() {
+                              userRequest = true;
+                            });
+                          },
+                        ),
+                      ],
+                    )
+                  ],
+                )
+              : Row(),
           Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: List.generate(
                 bloodRequest.length,
-                (index) => index < widget.itemCount
+                (index) => index < widget.itemCount &&
+                        ((userRequest == true &&
+                                bloodRequest[index].initiator?.id ==
+                                    widget.userid) ||
+                            (userRequest == false &&
+                                bloodRequest[index].initiator?.id !=
+                                    widget.userid))
                     ? DonorCard(
                         context: context,
                         fullname: bloodRequest[index].initiator?.fullname,
@@ -90,7 +161,10 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
                         loading: loading,
                         request: bloodRequest[index],
                         cords: cords,
-                      )
+                        owner:
+                            bloodRequest[index].initiator?.id == widget.userid
+                                ? true
+                                : false)
                     : const Row()).toList(),
           ),
         ],
@@ -116,14 +190,16 @@ String getDiff(date) {
         minutes = minutes % 60;
         hours = hours + (minutes / 60);
         _res += "${minutes.toInt().toString()} minutes ";
+      } else {
+        _res += "${minutes.toInt().toString()} minutes ";
       }
     }
     if (hours > 0) {
       if (hours > 24) {
         hours = (hours % 24);
         days = days + (hours / 24);
-        _res += "${hours.toInt().toString()} hours ";
       }
+      _res += "${hours.toInt().toString()} hours ";
     }
     if (days > 0) {
       _res += "${days.toInt().toString()} days ";
@@ -133,7 +209,15 @@ String getDiff(date) {
 }
 
 Widget DonorCard(
-    {fullname, bloodgroup, location, time, loading, context, request, cords}) {
+    {fullname,
+    bloodgroup,
+    location,
+    time,
+    loading,
+    context,
+    request,
+    cords,
+    owner}) {
   return Skeletonizer(
       enabled: loading,
       child: Card(
@@ -183,11 +267,13 @@ Widget DonorCard(
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
             children: [
               const SizedBox(
                 height: 20,
               ),
               Row(
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   const Icon(
                     Icons.location_on,
@@ -196,16 +282,26 @@ Widget DonorCard(
                   const SizedBox(
                     width: 10,
                   ),
-                  RichText(
-                    overflow: TextOverflow.ellipsis,
-                    strutStyle: const StrutStyle(fontSize: 2.0),
-                    text: TextSpan(
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 10,
-                      ),
-                      text: "$location",
-                    ),
+                  // RichText(
+                  //   overflow: TextOverflow.ellipsis,
+                  //   strutStyle: const StrutStyle(fontSize: 2.0),
+                  //   maxLines: 4,
+                  //   text: TextSpan(
+                  //     style: const TextStyle(
+                  //       color: Colors.black,
+                  //       fontSize: 10,
+                  //     ),
+
+                  //     text: location.toString(),
+                  //   ),
+                  // ),
+                  SizedBox(
+                    width: 250.0,
+                    child: Text("$location",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false,
+                        style: Theme.of(context).textTheme.displaySmall),
                   ),
                 ],
               ),
@@ -237,32 +333,56 @@ Widget DonorCard(
               const SizedBox(
                 height: 20,
               ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, Routes.donateblood,
-                      arguments: request);
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 7,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colours.mainColor,
-                  ),
-                  width: 400,
-                  child: const Text(
-                    "Donate Now",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colours.white,
+              owner == false
+                  ? GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, Routes.donateblood,
+                            arguments: request);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 7,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colours.mainColor,
+                        ),
+                        width: 400,
+                        child: const Text(
+                          "Donate Now",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colours.white,
+                          ),
+                        ),
+                      ),
+                    )
+                  : GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 7,
+                        ),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            border:
+                                Border.all(width: 0.3, color: Colors.black26)),
+                        width: 400,
+                        child: const Text(
+                          "Close this request",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               )
             ],

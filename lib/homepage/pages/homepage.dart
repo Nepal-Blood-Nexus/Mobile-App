@@ -233,6 +233,7 @@ class _HomePageState extends State<HomePage> {
                           child: BloodRequestScreen(
                             token: token,
                             itemCount: 3,
+                            userid: user.id!,
                           ),
                         )
                       : Row(),
@@ -242,13 +243,18 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      Column(
-        children: [
-          BloodRequestScreen(
-            token: token,
-            itemCount: 100,
-          ),
-        ],
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          children: [
+            BloodRequestScreen(
+              token: token,
+              itemCount: 100,
+              screen: "main",
+              userid: user.id!,
+            ),
+          ],
+        ),
       ),
       const Text(
         'Index 4: Requests',

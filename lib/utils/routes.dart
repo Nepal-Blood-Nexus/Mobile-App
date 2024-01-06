@@ -62,10 +62,10 @@ class Routes {
           duration: const Duration(milliseconds: 500),
         );
       case donateblood:
-        final BloodRequest _bloodRequest = settings.arguments as BloodRequest;
+        final BloodRequest bloodRequest_ = settings.arguments as BloodRequest;
         return PageTransition(
           child: DonateScreen(
-            bloodRequest: _bloodRequest,
+            bloodRequest: bloodRequest_,
           ),
           type: PageTransitionType.fade,
           duration: const Duration(milliseconds: 500),

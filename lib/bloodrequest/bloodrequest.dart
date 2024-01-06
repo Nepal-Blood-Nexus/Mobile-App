@@ -24,7 +24,7 @@ class _BloodRequestPageState extends State<BloodRequestPage> {
   User user = User();
   String token = "";
   bool noDonors = false;
-  late List<Donors> donors;
+  late List<Donors> donors = [];
 
   Future getUser() async {
     String? userString = await storage.read(key: "user");
@@ -106,24 +106,25 @@ class _BloodRequestPageState extends State<BloodRequestPage> {
         foregroundColor: Colours.white,
         actions: [
           GestureDetector(
-              child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            // margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            decoration: BoxDecoration(
-                color: Colours.mainColor,
-                borderRadius: BorderRadius.circular(8)),
-            child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  "CANCEL",
-                  style: TextStyle(
-                      color: Colours.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.normal),
-                )),
-          ))
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              // margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              decoration: BoxDecoration(
+                  color: Colours.mainColor,
+                  borderRadius: BorderRadius.circular(8)),
+              child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    "CANCEL",
+                    style: TextStyle(
+                        color: Colours.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal),
+                  )),
+            ),
+          )
         ],
       ),
       body: noDonors

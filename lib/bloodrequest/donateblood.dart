@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:nepal_blood_nexus/services/calls_and_messages_service.dart';
+import 'package:nepal_blood_nexus/services/service_locator.dart';
 import 'package:nepal_blood_nexus/utils/algo.dart';
 import 'package:nepal_blood_nexus/utils/colours.dart';
 import 'package:nepal_blood_nexus/utils/models/request.dart';
@@ -17,6 +19,7 @@ class DonateScreen extends StatefulWidget {
 
 class _DonateScreenState extends State<DonateScreen> {
   double? distance = 0;
+  final CallsAndMessagesService _service = locator<CallsAndMessagesService>();
 
   @override
   void initState() {
@@ -105,8 +108,8 @@ class _DonateScreenState extends State<DonateScreen> {
             style: LocationMarkerStyle(
               markerDirection: MarkerDirection.top,
               markerSize: Size.square(30),
-              accuracyCircleColor: Color.fromARGB(255, 249, 152, 162),
-              headingSectorColor: Color.fromARGB(255, 237, 131, 142),
+              accuracyCircleColor: const Color.fromARGB(255, 249, 152, 162),
+              headingSectorColor: const Color.fromARGB(255, 237, 131, 142),
               marker: Container(
                 child: CircleAvatar(
                   child: Text(widget.bloodRequest.initiator!.fullname![0]),
@@ -116,18 +119,140 @@ class _DonateScreenState extends State<DonateScreen> {
           ),
           Container(
             color: Colours.white,
-            height: 60,
-            padding: EdgeInsets.all(8.0),
+            height: 150,
+            padding: const EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: 25,
+            ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("${widget.bloodRequest.initiator!.fullname}"),
                     Text(
-                        "Blood Group: ${widget.bloodRequest.bloodGroup} ${distance}KM Away")
+                      "${widget.bloodRequest.initiator!.fullname}",
+                      style: const TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                    Text(
+                      "${widget.bloodRequest.bloodGroup}",
+                      style: const TextStyle(
+                          color: Colours.mainColor,
+                          fontWeight: FontWeight.w800),
+                    )
                   ],
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "${widget.bloodRequest.status}",
+                      style: TextStyle(
+                          color: Colors.green.shade400,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    Text("${distance}KM Away")
+                  ],
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 300.0,
+                      child: Text("${widget.bloodRequest.location}",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false,
+                          style: Theme.of(context).textTheme.displaySmall),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 7,
+                          horizontal: 15,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colours.mainColor,
+                        ),
+                        child: const Row(
+                          children: [
+                            Icon(
+                              Icons.chat_bubble,
+                              color: Colours.white,
+                              size: 18,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              "Chat",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colours.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _service.call(widget.bloodRequest.initiator!.phone!);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 7,
+                          horizontal: 15,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colours.mainColor,
+                        ),
+                        child: const Row(
+                          children: [
+                            Icon(
+                              Icons.phone,
+                              color: Colours.white,
+                              size: 18,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              "Call",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colours.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
           )

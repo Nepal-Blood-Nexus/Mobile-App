@@ -22,6 +22,130 @@ class MoreOptionPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           GestureDetector(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              decoration: BoxDecoration(
+                // color: Colours.mainColor,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 6),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.settings,
+                      size: 16,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Settings",
+                      style: TextStyle(
+                          color: Colours.mainColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          GestureDetector(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              decoration: BoxDecoration(
+                // color: Colours.mainColor,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 6),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.privacy_tip_outlined,
+                      size: 16,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Privacy policy",
+                      style: TextStyle(
+                          color: Colours.mainColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          GestureDetector(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              decoration: BoxDecoration(
+                // color: Colours.mainColor,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 6),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.tune_rounded,
+                      size: 16,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Terms & Condition",
+                      style: TextStyle(
+                          color: Colours.mainColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          GestureDetector(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              decoration: BoxDecoration(
+                // color: Colours.mainColor,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 6),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      size: 16,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "About NBN Project",
+                      style: TextStyle(
+                          color: Colours.mainColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          GestureDetector(
             onTap: () async {
               storage.deleteAll().then((value) {
                 Navigator.pushNamed(context, Routes.login);
@@ -31,27 +155,32 @@ class MoreOptionPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               decoration: BoxDecoration(
-                // color: Colours.mainColor,
                 borderRadius: BorderRadius.circular(8),
+                color: Colors.grey.shade200,
               ),
-              child: const Row(children: [
-                Icon(
-                  Icons.logout,
-                  size: 16,
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 6),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.logout,
+                      size: 16,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Logout",
+                      style: TextStyle(
+                          color: Colours.mainColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  "Log out",
-                  style: TextStyle(
-                      color: Colours.mainColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
-                ),
-              ]),
+              ),
             ),
-          )
+          ),
         ],
       ),
     );

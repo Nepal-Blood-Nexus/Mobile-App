@@ -10,6 +10,7 @@ import 'package:nepal_blood_nexus/homepage/pages/homepage.dart';
 import 'package:nepal_blood_nexus/onboard/pages/onboard.dart';
 import 'package:nepal_blood_nexus/repository/user_repo.dart';
 import 'package:nepal_blood_nexus/services/service_locator.dart';
+import 'package:nepal_blood_nexus/utils/colours.dart';
 import 'package:nepal_blood_nexus/utils/models/user.dart';
 import 'package:nepal_blood_nexus/utils/routes.dart';
 import 'package:nepal_blood_nexus/widgets/loading.dart';
@@ -197,6 +198,12 @@ class _MyAppState extends State<MyApp> {
           ),
           bodyMedium: GoogleFonts.raleway(),
           displaySmall: GoogleFonts.raleway(fontSize: 14),
+          headlineMedium: GoogleFonts.raleway(
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+            color: Colours.mainColor,
+          ),
+          labelSmall: GoogleFonts.ubuntu(fontSize: 10, color: Colors.black54),
         ),
       ),
       debugShowCheckedModeBanner: false,

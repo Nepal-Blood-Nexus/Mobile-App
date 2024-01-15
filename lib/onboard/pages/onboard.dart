@@ -187,7 +187,7 @@ class _OnboardPageState extends State<OnboardPage> {
           }
         },
         child: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: EdgeInsets.symmetric(horizontal: 1, vertical: 10),
           child: Row(
             children: [
               Text(
@@ -220,7 +220,7 @@ class _OnboardPageState extends State<OnboardPage> {
           );
         },
         child: const Padding(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: Text(
             'Sign up',
             style: TextStyle(

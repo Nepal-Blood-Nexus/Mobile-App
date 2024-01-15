@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:animated_icon/animated_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -101,6 +102,14 @@ class _SignupFormState extends State<SignupForm> {
                       DropdownMenuItem(
                         value: "A +ve",
                         child: Text("A +ve"),
+                      ),
+                      DropdownMenuItem(
+                        value: "B +ve",
+                        child: Text("B +ve"),
+                      ),
+                      DropdownMenuItem(
+                        value: "B -ve",
+                        child: Text("B -ve"),
                       ),
                       DropdownMenuItem(
                         value: "O +ve",
@@ -219,22 +228,13 @@ class _SignupFormState extends State<SignupForm> {
                     });
                   },
                   child: loading
-                      ? const LoadingIndicator(
-                          indicatorType: Indicator.pacman,
-
-                          /// Required, The loading type of the widget
-                          colors: [Colours.mainColor],
-
-                          /// Optional, The color collections
-                          strokeWidth: 1,
-
-                          /// Optional, The stroke of the line, only applicable to widget which contains line
-                          // backgroundColor: Colors.black,
-
-                          /// Optional, Background of the widget
-                          // pathBackgroundColor: Colors.black
-
-                          /// Optional, the stroke backgroundColor
+                      ? AnimateIcon(
+                          onTap: () {},
+                          iconType: IconType.continueAnimation,
+                          height: 16,
+                          width: 16,
+                          color: Colours.mainColor,
+                          animateIcon: AnimateIcons.loading5,
                         )
                       : const Text('Save & Next',
                           style: TextStyle(color: Colors.white)),

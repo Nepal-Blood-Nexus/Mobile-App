@@ -237,6 +237,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   // mainAxisAlignment: MainAxisAlignment.center,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
+                                    Text(
+                                      "New blood request",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium,
+                                    ),
                                     FormBuilderRadioGroup(
                                       name: "gender",
                                       onChanged: (value) {
@@ -250,7 +256,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         FormBuilderChipOption(value: "Female"),
                                       ],
                                       decoration: const InputDecoration(
-                                          labelText: 'Gender'),
+                                          labelText: 'Prefered Gender'),
                                     ),
                                     FormBuilderDropdown(
                                       name: "blood_group",

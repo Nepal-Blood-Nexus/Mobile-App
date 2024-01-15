@@ -1,3 +1,4 @@
+import 'package:animated_icon/animated_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
@@ -23,7 +24,6 @@ class _DonateScreenState extends State<DonateScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     calculateDistance(widget.bloodRequest.cordinates!).then((value) => {
           setState(() {
@@ -74,7 +74,7 @@ class _DonateScreenState extends State<DonateScreen> {
             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             userAgentPackageName:
                 'net.tlserver6y.flutter_map_location_marker.example',
-            maxZoom: 14,
+            maxZoom: 20,
           ),
           CurrentLocationLayer(
             indicators: LocationMarkerIndicators(
@@ -107,9 +107,9 @@ class _DonateScreenState extends State<DonateScreen> {
             heading: LocationMarkerHeading(heading: 5, accuracy: 5),
             style: LocationMarkerStyle(
               markerDirection: MarkerDirection.top,
-              markerSize: Size.square(30),
-              accuracyCircleColor: const Color.fromARGB(255, 249, 152, 162),
-              headingSectorColor: const Color.fromARGB(255, 237, 131, 142),
+              markerSize: const Size.square(30),
+              accuracyCircleColor: Color.fromARGB(255, 237, 211, 214),
+              headingSectorColor: Color.fromARGB(255, 222, 193, 196),
               marker: Container(
                 child: CircleAvatar(
                   child: Text(widget.bloodRequest.initiator!.fullname![0]),
@@ -176,8 +176,17 @@ class _DonateScreenState extends State<DonateScreen> {
                   height: 15,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    AnimateIcon(
+                      onTap: () {},
+                      iconType: IconType.continueAnimation,
+                      height: 20,
+                      width: 20,
+                      color: Colours.mainColor,
+                      animateIcon: AnimateIcons.activity,
+                    ),
                     GestureDetector(
                       onTap: () {},
                       child: Container(
@@ -212,9 +221,6 @@ class _DonateScreenState extends State<DonateScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      width: 20,
-                    ),
                     GestureDetector(
                       onTap: () {
                         _service.call(widget.bloodRequest.initiator!.phone!);
@@ -240,6 +246,42 @@ class _DonateScreenState extends State<DonateScreen> {
                             ),
                             Text(
                               "Call",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colours.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _service.launchMap(widget.bloodRequest.location!);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 7,
+                          horizontal: 15,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colours.mainColor,
+                        ),
+                        child: const Row(
+                          children: [
+                            Icon(
+                              Icons.directions,
+                              color: Colours.white,
+                              size: 18,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              "Get Direction",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 14,

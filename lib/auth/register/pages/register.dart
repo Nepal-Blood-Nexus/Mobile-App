@@ -82,118 +82,133 @@ class RegisterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // logo
-              Image.asset("assets/images/logo05x.png"),
-              const SizedBox(
-                height: 7,
-              ),
-              const Text(
-                "Register your account",
-                style:
-                    TextStyle(fontWeight: FontWeight.w600, letterSpacing: 1.5),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              // full name
-              CustomTextInput(
-                hintText: "Your Full Name",
-                controller: fullnameController,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              CustomTextInput(
-                hintText: "email",
-                controller: emailController,
-                textInputType: TextInputType.emailAddress,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              CustomTextInput(
-                hintText: "phone",
-                controller: phoneController,
-                textInputType: TextInputType.phone,
-              ),
-              const SizedBox(
-                height: 6,
-              ),
-              CustomTextInput(
-                hintText: "password",
-                obsureText: true,
-                controller: passwordController,
-              ),
-
-              ButtonV1(
-                text: "Register",
-                onTap: () {
-                  showLoading(context);
-                  _register().then((value) {
-                    var response = jsonDecode(value);
-                    if (response["success"] == false) {
-                      displayDialog(context, "Failed", response["error"]);
-                    } else {
-                      User user = User.fromJson(response["user"]);
-                      String usr = jsonEncode(response["user"]);
-                      storage.write(key: "token", value: response["token"]);
-                      storage.write(key: "user", value: usr);
-
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        Routes.home,
-                        (routes) => false,
-                        arguments: {"token": response["token"], "user": user},
-                      );
-                    }
-                  });
-                },
-              ),
-
-              const Text("Already Registerd?"),
-              TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, Routes.login);
-                  },
-                  child: const Text(
-                    "Login",
-                    style: TextStyle(color: Colours.mainColor),
-                  )),
-
-              // google login
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25),
-                child: Row(children: [
-                  Expanded(
-                    child: Divider(
-                      thickness: 0.5,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Text("or continue with"),
-                  ),
-                  Expanded(
-                    child: Divider(
-                      thickness: 0.5,
-                    ),
-                  ),
-                ]),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Image.asset(
-                  "assets/images/google.png",
-                  height: 30,
+        child: Container(
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+                alignment: Alignment.center,
+                fit: BoxFit.fill,
+                opacity: 0.3,
+                image: AssetImage(
+                  "assets/images/register-bg.jpg",
                 ),
               ),
+              color: Color.fromARGB(255, 0, 0, 0),
+              backgroundBlendMode: BlendMode.overlay),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // logo
+                Image.asset("assets/images/logo05x.png"),
+                const SizedBox(
+                  height: 7,
+                ),
+                const Text(
+                  "Register your account",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.5,
+                      fontSize: 22),
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                // full name
+                CustomTextInput(
+                  hintText: "Your Full Name",
+                  controller: fullnameController,
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                // CustomTextInput(
+                //   hintText: "email",
+                //   controller: emailController,
+                //   textInputType: TextInputType.emailAddress,
+                // ),
+                // const SizedBox(
+                //   height: 2,
+                // ),
+                CustomTextInput(
+                  hintText: "Phone No.",
+                  controller: phoneController,
+                  textInputType: TextInputType.phone,
+                ),
+                const SizedBox(
+                  height: 2,
+                ),
+                CustomTextInput(
+                  hintText: "password",
+                  obsureText: true,
+                  controller: passwordController,
+                ),
 
-              //already member login now
-            ],
+                ButtonV1(
+                  text: "Register",
+                  onTap: () {
+                    showLoading(context);
+                    _register().then((value) {
+                      var response = jsonDecode(value);
+                      if (response["success"] == false) {
+                        displayDialog(context, "Failed", response["error"]);
+                      } else {
+                        User user = User.fromJson(response["user"]);
+                        String usr = jsonEncode(response["user"]);
+                        storage.write(key: "token", value: response["token"]);
+                        storage.write(key: "user", value: usr);
+
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          Routes.home,
+                          (routes) => false,
+                          arguments: {"token": response["token"], "user": user},
+                        );
+                      }
+                    });
+                  },
+                ),
+
+                const Text("Already Registerd?"),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, Routes.login);
+                    },
+                    child: const Text(
+                      "Login",
+                      style: TextStyle(color: Colours.mainColor),
+                    )),
+
+                // google login
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(children: [
+                    Expanded(
+                      child: Divider(
+                        thickness: 0.5,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Text("or continue with"),
+                    ),
+                    Expanded(
+                      child: Divider(
+                        thickness: 0.5,
+                      ),
+                    ),
+                  ]),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Image.asset(
+                    "assets/images/google.png",
+                    height: 30,
+                  ),
+                ),
+
+                //already member login now
+              ],
+            ),
           ),
         ),
       ),

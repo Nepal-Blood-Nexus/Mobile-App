@@ -7,6 +7,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:nepal_blood_nexus/homepage/screens/blood_request.dart';
+import 'package:nepal_blood_nexus/homepage/screens/donationplaces_screen.dart';
 import 'package:nepal_blood_nexus/homepage/screens/profile.dart';
 import 'package:nepal_blood_nexus/repository/user_repo.dart';
 import 'package:nepal_blood_nexus/utils/colours.dart';
@@ -160,11 +161,11 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     late List<Widget> widgetOptions = <Widget>[
       const Text(
-        'Index 1: Business',
+        'Insights Screen',
         style: optionStyle,
       ),
       const Text(
-        'Index 2: Home',
+        'Notifications',
         style: optionStyle,
       ),
       Column(
@@ -180,7 +181,7 @@ class _HomePageState extends State<HomePage> {
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 10,
-                vertical: 20,
+                vertical: 10,
               ),
               child: Column(
                 children: [
@@ -232,13 +233,79 @@ class _HomePageState extends State<HomePage> {
                           enabled: loading,
                           child: BloodRequestScreen(
                             token: token,
-                            itemCount: 3,
+                            itemCount: 1,
                             userid: user.id!,
                           ),
                         )
                       : Row(),
                 ],
               ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 0,
+            ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          "Your Blood Insights",
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
+                        AnimateIcon(
+                          onTap: () {},
+                          iconType: IconType.continueAnimation,
+                          height: 16,
+                          width: 16,
+                          color: Colours.mainColor,
+                          animateIcon: AnimateIcons.info,
+                        ),
+                      ],
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _onItemTapped(0);
+                      },
+                      child: const Row(
+                        children: [
+                          Text(
+                            "More",
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Icon(Icons.chevron_right)
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AnimateIcon(
+                        onTap: () {},
+                        iconType: IconType.continueAnimation,
+                        height: 56,
+                        width: 56,
+                        color: Colours.mainColor,
+                        animateIcon: AnimateIcons.hourglass,
+                      ),
+                      Text(
+                        "Preparing Insights. Compiled blood report insights will be shown once we complete analyzing your blood report",
+                        style: Theme.of(context).textTheme.labelSmall,
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
+                )
+              ],
             ),
           )
         ],
@@ -256,9 +323,8 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      const Text(
-        'Index 4: Requests',
-        style: optionStyle,
+      Container(
+        child: DonationPlaces(),
       ),
     ];
 

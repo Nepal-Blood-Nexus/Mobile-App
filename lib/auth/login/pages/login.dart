@@ -79,113 +79,126 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // logo
-              Image.asset("assets/images/logo05x.png"),
-              const SizedBox(
-                height: 7,
-              ),
-              const Text(
-                "Login",
-                style:
-                    TextStyle(fontWeight: FontWeight.w600, letterSpacing: 1.5),
-              ),
-
-              const SizedBox(
-                height: 10,
-              ),
-              CustomTextInput(
-                hintText: "email",
-                controller: emailController,
-                textInputType: TextInputType.emailAddress,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              CustomTextInput(
-                hintText: "phone",
-                controller: phoneController,
-                textInputType: TextInputType.phone,
-              ),
-              const SizedBox(
-                height: 7,
-              ),
-              CustomTextInput(
-                hintText: "password",
-                obsureText: true,
-                controller: passwordController,
-              ),
-
-              ButtonV1(
-                text: "Login",
-                onTap: () {
-                  showLoading(context);
-                  _register().then((value) {
-                    debugPrint(value.toString());
-                    var response = jsonDecode(value);
-                    if (response["success"] == false) {
-                      displayDialog(context, "Failed", response["error"]);
-                    } else {
-                      User user = User.fromJson(response["user"]);
-
-                      storage.write(key: "token", value: response["token"]);
-                      storage.write(
-                          key: "user", value: jsonEncode(response["user"]));
-
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        Routes.home,
-                        (routes) => false,
-                        arguments: {"token": response["token"], "user": user},
-                      );
-                    }
-                  });
-                },
-              ),
-
-              const Text("Dont Have an account?"),
-              TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, Routes.register);
-                  },
-                  child: const Text(
-                    "Register",
-                    style: TextStyle(color: Colours.mainColor),
-                  )),
-
-              // google login
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25),
-                child: Row(children: [
-                  Expanded(
-                    child: Divider(
-                      thickness: 0.5,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Text("or continue with"),
-                  ),
-                  Expanded(
-                    child: Divider(
-                      thickness: 0.5,
-                    ),
-                  ),
-                ]),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Image.asset(
-                  "assets/images/google.png",
-                  height: 30,
+        child: Container(
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+                alignment: Alignment.center,
+                fit: BoxFit.fill,
+                opacity: 0.3,
+                image: AssetImage(
+                  "assets/images/register-bg.jpg",
                 ),
               ),
+              color: Color.fromARGB(255, 0, 0, 0),
+              backgroundBlendMode: BlendMode.overlay),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // logo
+                Image.asset("assets/images/logo05x.png"),
+                const SizedBox(
+                  height: 7,
+                ),
+                const Text(
+                  "Login",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600, letterSpacing: 1.5),
+                ),
 
-              //already member login now
-            ],
+                const SizedBox(
+                  height: 10,
+                ),
+                // CustomTextInput(
+                //   hintText: "email",
+                //   controller: emailController,
+                //   textInputType: TextInputType.emailAddress,
+                // ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomTextInput(
+                  hintText: "phone",
+                  controller: phoneController,
+                  textInputType: TextInputType.phone,
+                ),
+                const SizedBox(
+                  height: 7,
+                ),
+                CustomTextInput(
+                  hintText: "password",
+                  obsureText: true,
+                  controller: passwordController,
+                ),
+
+                ButtonV1(
+                  text: "Login",
+                  onTap: () {
+                    showLoading(context);
+                    _register().then((value) {
+                      debugPrint(value.toString());
+                      var response = jsonDecode(value);
+                      if (response["success"] == false) {
+                        displayDialog(context, "Failed", response["error"]);
+                      } else {
+                        User user = User.fromJson(response["user"]);
+
+                        storage.write(key: "token", value: response["token"]);
+                        storage.write(
+                            key: "user", value: jsonEncode(response["user"]));
+
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          Routes.home,
+                          (routes) => false,
+                          arguments: {"token": response["token"], "user": user},
+                        );
+                      }
+                    });
+                  },
+                ),
+
+                const Text("Dont Have an account?"),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, Routes.register);
+                    },
+                    child: const Text(
+                      "Register",
+                      style: TextStyle(color: Colours.mainColor),
+                    )),
+
+                // google login
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  child: Row(children: [
+                    Expanded(
+                      child: Divider(
+                        thickness: 0.5,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Text("or continue with"),
+                    ),
+                    Expanded(
+                      child: Divider(
+                        thickness: 0.5,
+                      ),
+                    ),
+                  ]),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Image.asset(
+                    "assets/images/google.png",
+                    height: 30,
+                  ),
+                ),
+
+                //already member login now
+              ],
+            ),
           ),
         ),
       ),

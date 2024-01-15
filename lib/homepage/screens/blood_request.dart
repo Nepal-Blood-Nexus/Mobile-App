@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:nepal_blood_nexus/utils/api.dart';
 import 'package:nepal_blood_nexus/utils/colours.dart';
 import 'package:nepal_blood_nexus/utils/models/request.dart';
 import 'package:http/http.dart' as http;
@@ -161,6 +162,7 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
                         loading: loading,
                         request: bloodRequest[index],
                         cords: cords,
+                        function: _getBloodRequest,
                         owner:
                             bloodRequest[index].initiator?.id == widget.userid
                                 ? true
@@ -217,7 +219,8 @@ Widget DonorCard(
     context,
     request,
     cords,
-    owner}) {
+    owner,
+    function}) {
   return Skeletonizer(
       enabled: loading,
       child: Card(
@@ -360,7 +363,13 @@ Widget DonorCard(
                       ),
                     )
                   : GestureDetector(
-                      onTap: () {},
+                      onTap: () async {
+                        // TODO: call api to close this blood request
+                        var res = await getAPI("api/request/close");
+                        if (res.statusCode == 200) {
+                          function();
+                        }
+                      },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: 7,

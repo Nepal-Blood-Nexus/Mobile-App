@@ -14,15 +14,15 @@ class Loading extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              child: Lottie.asset(
-                'assets/images/loader.json',
-                // fit: BoxFit.contain,
-                width: 200,
-                height: 200,
-                fit: BoxFit.fill,
-              ),
-            ),
+            // Container(
+            //   child: Lottie.asset(
+            //     'assets/images/loader.json',
+            //     // fit: BoxFit.contain,
+            //     width: 200,
+            //     height: 200,
+            //     fit: BoxFit.fill,
+            //   ),
+            // ),
             const Text(
               "Connecting To server",
               style: TextStyle(fontSize: 11, decoration: TextDecoration.none),

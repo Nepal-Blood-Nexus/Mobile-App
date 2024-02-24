@@ -11,7 +11,6 @@ import 'package:nepal_blood_nexus/utils/models/donors.dart';
 import 'package:nepal_blood_nexus/utils/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:nepal_blood_nexus/widgets/button_v1.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 const storage = FlutterSecureStorage();
 
@@ -154,7 +153,7 @@ class _BloodRequestPageState extends State<BloodRequestPage> {
                         double.parse(user.last_location!.split(",")[0]),
                         double.parse(user.last_location!.split(",")[1])),
                     zoom: 12,
-                    minZoom: 0,
+                    minZoom: 3,
                     maxZoom: 19,
                   ),
                   children: [
@@ -242,7 +241,7 @@ Widget DonorCard(donors) {
                     ),
                     Text(
                       '${donors[index].distanceFromPreferedLocation} km away',
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: Color.fromARGB(255, 18, 115, 47),
                           fontWeight: FontWeight.w600),
                     ),
@@ -275,7 +274,13 @@ Widget DonorCard(donors) {
                     SizedBox(
                       width: 20,
                     ),
-                    Text("REQUEST")
+                    Icon(
+                      Icons.record_voice_over_rounded,
+                      color: Colours.mainColor,
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
                   ],
                 )
               ],
@@ -319,7 +324,7 @@ List<Widget> DonorPin({donors}) {
                 ),
               ),
             )
-          : Row());
+          : const Row());
 }
 
 String getName(String name) {

@@ -3,10 +3,12 @@ import 'package:nepal_blood_nexus/auth/login/pages/login.dart';
 import 'package:nepal_blood_nexus/auth/register/pages/register.dart';
 import 'package:nepal_blood_nexus/bloodrequest/bloodrequest.dart';
 import 'package:nepal_blood_nexus/bloodrequest/donateblood.dart';
+import 'package:nepal_blood_nexus/chat/chat_screen.dart';
 import 'package:nepal_blood_nexus/homepage/pages/homepage.dart';
 import 'package:nepal_blood_nexus/homepage/screens/setup.dart';
 import 'package:nepal_blood_nexus/more/more_option.dart';
 import 'package:nepal_blood_nexus/onboard/pages/onboard.dart';
+import 'package:nepal_blood_nexus/utils/models/chat.dart';
 import 'package:nepal_blood_nexus/utils/models/request.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -19,6 +21,8 @@ class Routes {
   static const String more = 'more';
   static const String bloodrequest = 'bloodrequest';
   static const String donateblood = 'donateblood';
+  static const String dev = 'dev';
+  static const String chat = 'chat';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -80,6 +84,20 @@ class Routes {
 
       case more:
         return MaterialPageRoute(builder: (context) => const MoreOptionPage());
+
+      case chat:
+        final ChatData chatData = settings.arguments as ChatData;
+        return MaterialPageRoute(
+            builder: (context) => ChatScreen(chatData: chatData));
+
+      case dev:
+        return MaterialPageRoute(
+          builder: (context) => const Scaffold(
+            body: Center(
+              child: Text("in progress"),
+            ),
+          ),
+        );
 
       default:
         return MaterialPageRoute(

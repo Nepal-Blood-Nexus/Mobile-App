@@ -86,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   text:
                       "Set up your profile to get insights about your blood. Click Here to setup")
               : Skeletonizer(
-                  enabled: widget.loading,
+                  enabled: false,
                   child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

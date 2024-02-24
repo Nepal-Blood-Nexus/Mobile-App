@@ -63,6 +63,7 @@ dependencies:
   syncfusion_flutter_maps: ^24.1.44
   url_launcher: ^6.2.2
   get_it: ^7.6.4
+  card_swiper: ^3.0.1
 
 flutter_native_splash:
   color: "#DE0A1E"

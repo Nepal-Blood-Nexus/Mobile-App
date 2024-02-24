@@ -7,7 +7,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:nepal_blood_nexus/utils/colours.dart';
 import 'package:http/http.dart' as http;
-import 'package:loading_indicator/loading_indicator.dart';
 import 'package:nepal_blood_nexus/utils/models/user.dart';
 import 'package:nepal_blood_nexus/utils/routes.dart';
 

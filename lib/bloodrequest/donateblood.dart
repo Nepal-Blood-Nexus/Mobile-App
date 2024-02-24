@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:nepal_blood_nexus/repository/chat_repo.dart';
 import 'package:nepal_blood_nexus/services/calls_and_messages_service.dart';
 import 'package:nepal_blood_nexus/services/service_locator.dart';
 import 'package:nepal_blood_nexus/utils/algo.dart';
 import 'package:nepal_blood_nexus/utils/colours.dart';
+import 'package:nepal_blood_nexus/utils/models/chat.dart';
 import 'package:nepal_blood_nexus/utils/models/request.dart';
+import 'package:nepal_blood_nexus/utils/routes.dart';
 
 class DonateScreen extends StatefulWidget {
   const DonateScreen({super.key, required this.bloodRequest});
@@ -20,6 +23,7 @@ class DonateScreen extends StatefulWidget {
 
 class _DonateScreenState extends State<DonateScreen> {
   double? distance = 0;
+  late ChatData chatData;
   final CallsAndMessagesService _service = locator<CallsAndMessagesService>();
 
   @override
@@ -179,16 +183,16 @@ class _DonateScreenState extends State<DonateScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    AnimateIcon(
-                      onTap: () {},
-                      iconType: IconType.continueAnimation,
-                      height: 20,
-                      width: 20,
-                      color: Colours.mainColor,
-                      animateIcon: AnimateIcons.activity,
-                    ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        initiateChatwithRequest(widget.bloodRequest.id)
+                            .then((value) => {
+                                  chatData = ChatData.fromJson(value),
+                                  Navigator.pushNamed(context, Routes.chat,
+                                      arguments: chatData)
+                                });
+                        // print(chat);
+                      },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: 7,

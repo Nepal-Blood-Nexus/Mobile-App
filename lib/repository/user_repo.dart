@@ -21,5 +21,7 @@ Future saveLocation(location, fcmtoken) async {
       debugPrint("save cords in local");
       return response;
     }
+  } else {
+    debugPrint("Token not found in savelocation function");
   }
 }

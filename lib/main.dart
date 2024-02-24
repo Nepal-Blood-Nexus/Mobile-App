@@ -130,6 +130,7 @@ class _MyAppState extends State<MyApp> {
       if (storedToken != null) {
         debugPrint("token not null setting loading");
         setState(() {
+          token = storedToken;
           loading = true;
         });
         LocationPermission permission;
@@ -154,8 +155,10 @@ class _MyAppState extends State<MyApp> {
           return Future.error(
               'Location permissions are permanently denied, we cannot request permissions.');
         }
+        debugPrint("geolocating");
+
         await Geolocator.getCurrentPosition(
-                desiredAccuracy: LocationAccuracy.best,
+                desiredAccuracy: LocationAccuracy.high,
                 forceAndroidLocationManager: true)
             .then((Position position) {
           saveLocation("${position.latitude},${position.longitude}", fcmToken)
@@ -171,7 +174,7 @@ class _MyAppState extends State<MyApp> {
             }
           });
         }).catchError((e) {
-          // print(e);
+          print(e);
         });
       } else {
         // Handle the case when the token is not found.

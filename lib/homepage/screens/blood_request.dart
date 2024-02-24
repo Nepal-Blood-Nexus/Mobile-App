@@ -64,7 +64,6 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     loading;
     bloodRequest;
     super.dispose();
@@ -299,12 +298,12 @@ Widget DonorCard(
                   //   ),
                   // ),
                   SizedBox(
-                    width: 250.0,
+                    width: 200.0,
                     child: Text("$location",
                         maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        overflow: TextOverflow.clip,
                         softWrap: false,
-                        style: Theme.of(context).textTheme.displaySmall),
+                        style: Theme.of(context).textTheme.bodySmall),
                   ),
                 ],
               ),

@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
           debugPrint("saving cords");
           saveLocation("${position.latitude},${position.longitude}", fcmToken)
               .then((response) async {
-            print(response["user"]);
+            // print(response["user"]);
             if (response != null) {
               storage.write(key: "user", value: jsonEncode(response["user"]));
               storage.write(key: "token", value: response["token"]);
@@ -119,7 +119,7 @@ class _HomePageState extends State<HomePage> {
             }
           });
         }).catchError((e) {
-          // print(e);
+          print(e);
         });
       } else {
         // Handle the case when the token is not found.
@@ -237,7 +237,7 @@ class _HomePageState extends State<HomePage> {
                             userid: user.id!,
                           ),
                         )
-                      : Row(),
+                      : const Row(),
                 ],
               ),
             ),
@@ -285,7 +285,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 10),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -324,16 +324,18 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       Container(
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
         child: DonationPlaces(),
       ),
     ];
 
     return Scaffold(
       backgroundColor: Colours.white,
+      drawerScrimColor: Colors.transparent,
       bottomNavigationBar: CurvedNavigationBar(
         index: _selectedIndex,
         color: Colours.mainColor,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.transparent.withOpacity(0),
         animationDuration: const Duration(milliseconds: 300),
         height: 50,
         items: const <Widget>[
@@ -351,51 +353,25 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+                padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Column(children: [
-                      Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text("Good Morning"),
-                            Skeletonizer(
-                              enabled: loading,
-                              child: Text(
-                                "${user.fullname}",
-                                style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colours.mainColor),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 30,
-                            ),
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.location_on,
-                                  size: 13,
-                                  color: Colours.mainColor,
-                                ),
-                                Skeletonizer(
-                                  enabled: loading,
-                                  child: locationGeo != ''
-                                      ? Text(
-                                          locationGeo,
-                                          style: const TextStyle(fontSize: 11),
-                                        )
-                                      : const Text("Fetching"),
-                                ),
-                              ],
-                            )
-                            // Text("locationGeo"),
-                          ]),
-                    ]),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("Good Morning"),
+                        Text(
+                          "${user.fullname}",
+                          style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: Colours.mainColor),
+                        ),
+                      ],
+                    ),
                     IconButton(
                       onPressed: () {
                         // storage.delete(key: "token");
@@ -409,8 +385,33 @@ class _HomePageState extends State<HomePage> {
                       tooltip: "More",
                       color: const Color.fromARGB(255, 242, 22, 22),
                     ),
+
+                    // Text("locationGeo"),
                   ],
                 ),
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.location_on,
+                    size: 13,
+                    color: Colours.mainColor,
+                  ),
+                  Skeletonizer(
+                    enabled: loading,
+                    child: locationGeo != ''
+                        ? Text(
+                            locationGeo,
+                            style: const TextStyle(fontSize: 11),
+                          )
+                        : const Text("Fetching"),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
               ),
               widgetOptions[_selectedIndex]
             ],

@@ -147,6 +147,40 @@ class MoreOptionPage extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () async {
+              Navigator.pushNamed(context, Routes.dev);
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: Colors.grey.shade200,
+              ),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 6),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.person_add_alt_outlined,
+                      size: 16,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Edit Profile",
+                      style: TextStyle(
+                          color: Colours.mainColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () async {
               storage.deleteAll().then((value) {
                 Navigator.pushNamed(context, Routes.login);
               });

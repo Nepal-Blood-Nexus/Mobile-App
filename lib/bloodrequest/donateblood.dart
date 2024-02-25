@@ -185,13 +185,8 @@ class _DonateScreenState extends State<DonateScreen> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        initiateChatwithRequest(widget.bloodRequest.id)
-                            .then((value) => {
-                                  chatData = ChatData.fromJson(value),
-                                  Navigator.pushNamed(context, Routes.chat,
-                                      arguments: chatData)
-                                });
-                        // print(chat);
+                        Navigator.pushNamed(context, Routes.chat,
+                            arguments: widget.bloodRequest.id);
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(

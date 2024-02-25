@@ -14,6 +14,7 @@ import 'package:nepal_blood_nexus/utils/colours.dart';
 import 'package:nepal_blood_nexus/utils/models/user.dart';
 import 'package:nepal_blood_nexus/utils/routes.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:animated_icon/animated_icon.dart';
 
@@ -29,6 +30,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final storage = const FlutterSecureStorage();
+
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   String fcmToken = "";
   String locationGeo = "";
@@ -56,6 +58,13 @@ class _HomePageState extends State<HomePage> {
       });
       debugPrint("fetch token in homepage");
       String? storedToken = await storage.read(key: 'token');
+      String? userString = await storage.read(key: 'user');
+
+      setState(() {
+        token = storedToken!;
+        user = User.fromJson(jsonDecode(userString!));
+        loading = false;
+      });
 
       await messaging.requestPermission(
         alert: true,
@@ -149,12 +158,43 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<void> connect() async {
+    try {
+      PusherChannelsFlutter pusher = PusherChannelsFlutter.getInstance();
+      await pusher.init(
+        apiKey: "b6fc6c0bbaa88e19ba69",
+        cluster: "ap2",
+        onError: onError,
+        onEvent: onEvent,
+        onSubscriptionCount: onSubscriptionCount,
+        // authEndpoint: "<Your Authendpoint Url>",
+        // onAuthorizer: onAuthorizer
+      );
+      await pusher.subscribe(channelName: "main");
+      await pusher.connect();
+    } catch (e) {
+      debugPrint("ERROR: $e");
+    }
+  }
+
+  void onError(String message, int? code, dynamic e) {
+    debugPrint("onError: $message code: $code exception: $e");
+  }
+
+  void onEvent(PusherEvent event) {
+    debugPrint("onEvent: $event");
+  }
+
+  void onSubscriptionCount(String channelName, int subscriptionCount) {
+    debugPrint(
+        "onSubscriptionCount: $channelName subscriptionCount: $subscriptionCount");
+  }
+
   @override
   void initState() {
     super.initState();
-    user = widget.user as User;
-    token = widget.token as String;
     _fetchToken().then((value) {});
+    connect();
   }
 
   @override
@@ -228,16 +268,16 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  cords != ""
-                      ? Skeletonizer(
-                          enabled: loading,
-                          child: BloodRequestScreen(
+                  Skeletonizer(
+                    enabled: loading,
+                    child: user.id != null
+                        ? BloodRequestScreen(
                             token: token,
                             itemCount: 1,
                             userid: user.id!,
-                          ),
-                        )
-                      : const Row(),
+                          )
+                        : const Row(),
+                  ),
                 ],
               ),
             ),
@@ -312,16 +352,18 @@ class _HomePageState extends State<HomePage> {
       ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          children: [
-            BloodRequestScreen(
-              token: token,
-              itemCount: 100,
-              screen: "main",
-              userid: user.id!,
-            ),
-          ],
-        ),
+        child: user.id != null
+            ? Column(
+                children: [
+                  BloodRequestScreen(
+                    token: token,
+                    itemCount: 100,
+                    screen: "main",
+                    userid: user.id!,
+                  ),
+                ],
+              )
+            : const Row(),
       ),
       Container(
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
@@ -372,18 +414,35 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                    IconButton(
-                      onPressed: () {
-                        // storage.delete(key: "token");
-                        // storage.delete(key: "user");
-                        Navigator.pushNamed(context, Routes.more);
-                      },
-                      icon: const Icon(
-                        Icons.read_more,
-                        size: 30,
-                      ),
-                      tooltip: "More",
-                      color: const Color.fromARGB(255, 242, 22, 22),
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            // storage.delete(key: "token");
+                            // storage.delete(key: "user");
+                            Navigator.pushNamed(context, Routes.allchats);
+                          },
+                          icon: const Icon(
+                            Icons.chat_bubble_outline_rounded,
+                            size: 30,
+                          ),
+                          tooltip: "More",
+                          color: const Color.fromARGB(255, 242, 22, 22),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            // storage.delete(key: "token");
+                            // storage.delete(key: "user");
+                            Navigator.pushNamed(context, Routes.more);
+                          },
+                          icon: const Icon(
+                            Icons.read_more,
+                            size: 30,
+                          ),
+                          tooltip: "More",
+                          color: const Color.fromARGB(255, 242, 22, 22),
+                        ),
+                      ],
                     ),
 
                     // Text("locationGeo"),
@@ -406,7 +465,10 @@ class _HomePageState extends State<HomePage> {
                             locationGeo,
                             style: const TextStyle(fontSize: 11),
                           )
-                        : const Text("Fetching"),
+                        : const Text(
+                            "Locating....",
+                            style: TextStyle(fontSize: 10),
+                          ),
                   ),
                 ],
               ),

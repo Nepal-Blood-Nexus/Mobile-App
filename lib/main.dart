@@ -99,6 +99,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    loading = true;
     _fetchToken();
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -117,6 +118,12 @@ class _MyAppState extends State<MyApp> {
   Future<void> _fetchToken() async {
     try {
       String? storedToken = await storage.read(key: 'token');
+      String? userString = await storage.read(key: 'user');
+      User user = User.fromJson(jsonDecode(userString as String));
+      setState(() {
+        token = storedToken!;
+        user = user;
+      });
       await messaging.requestPermission(
         alert: true,
         announcement: false,
@@ -128,11 +135,10 @@ class _MyAppState extends State<MyApp> {
       );
 
       if (storedToken != null) {
-        debugPrint("token not null setting loading");
         setState(() {
-          token = storedToken;
-          loading = true;
+          loading = false;
         });
+        debugPrint("token not null setting loading");
         LocationPermission permission;
         FirebaseMessaging.instance.getToken().then((value) => {
               debugPrint("FCM Token Is: "),
@@ -161,6 +167,10 @@ class _MyAppState extends State<MyApp> {
                 desiredAccuracy: LocationAccuracy.high,
                 forceAndroidLocationManager: true)
             .then((Position position) {
+          debugPrint("Main:: position found ${position.toString()}");
+          setState(() {
+            loading = false;
+          });
           saveLocation("${position.latitude},${position.longitude}", fcmToken)
               .then((response) {
             if (response != null) {

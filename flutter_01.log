@@ -1,0 +1,69 @@
+Flutter crash report.
+Please report a bug at https://github.com/flutter/flutter/issues.
+
+## command
+
+flutter debug_adapter
+
+## exception
+
+RPCError: resume: (-32000) Bad state: The client is closed.
+
+```
+#0      new _OutstandingRequest (package:vm_service/src/vm_service.dart:1930:45)
+#1      VmService._call (package:vm_service/src/vm_service.dart:2499:21)
+#2      VmService.resume (package:vm_service/src/vm_service.dart:2374:7)
+#3      IsolateManager.resumeThread (package:dds/src/dap/isolate_manager.dart:328:33)
+#4      IsolateManager._handlePause (package:dds/src/dap/isolate_manager.dart:561:15)
+<asynchronous suspension>
+#5      IsolateManager.handleEvent (package:dds/src/dap/isolate_manager.dart:212:7)
+<asynchronous suspension>
+#6      DartDebugAdapter.handleDebugEvent (package:dds/src/dap/adapters/dart.dart:2247:5)
+<asynchronous suspension>
+#7      DartDebugAdapter._withErrorHandling (package:dds/src/dap/adapters/dart.dart:2596:14)
+<asynchronous suspension>
+```
+
+## flutter doctor
+
+```
+[✓] Flutter (Channel stable, 3.16.1, on Ubuntu 22.04.3 LTS 6.5.0-18-generic, locale en_US.UTF-8)
+    • Flutter version 3.16.1 on channel stable at /home/sudeep/snap/flutter/common/flutter
+    • Upstream repository https://github.com/flutter/flutter.git
+    • Framework revision 7f20e5d18c (3 months ago), 2023-11-27 09:47:30 -0800
+    • Engine revision 22b600f240
+    • Dart version 3.2.1
+    • DevTools version 2.28.3
+
+[✓] Android toolchain - develop for Android devices (Android SDK version 30.0.3)
+    • Android SDK at /home/sudeep/Android
+    • Platform android-33, build-tools 30.0.3
+    • Java binary at: /usr/bin/java
+    • Java version OpenJDK Runtime Environment (build 17.0.9+9-Ubuntu-122.04)
+    • All Android licenses accepted.
+
+[✗] Chrome - develop for the web (Cannot find Chrome executable at google-chrome)
+    ! Cannot find Chrome. Try setting CHROME_EXECUTABLE to a Chrome executable.
+
+[✓] Linux toolchain - develop for Linux desktop
+    • clang version 10.0.0-4ubuntu1
+    • cmake version 3.16.3
+    • ninja version 1.10.0
+    • pkg-config version 0.29.1
+
+[!] Android Studio (not installed)
+    • Android Studio not found; download from https://developer.android.com/studio/index.html
+      (or visit https://flutter.dev/docs/get-started/install/linux#android-setup for detailed instructions).
+
+[✓] VS Code (version 1.84.2)
+    • VS Code at /usr/share/code
+    • Flutter extension version 3.82.0
+
+[✓] Connected device (1 available)
+    • Linux (desktop) • linux • linux-x64 • Ubuntu 22.04.3 LTS 6.5.0-18-generic
+
+[✓] Network resources
+    • All expected network resources are available.
+
+! Doctor found issues in 2 categories.
+```

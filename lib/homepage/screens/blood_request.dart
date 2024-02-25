@@ -35,7 +35,9 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
   bool userRequest = false;
 
   List<BloodRequest> convertJsonToList(List<dynamic> jsonList) {
-    return jsonList.map((json) => BloodRequest.fromJson(json)).toList();
+    var objlist =
+        jsonList.map((json) => BloodRequest.fromJson(json)).toList().reversed;
+    return List.from(objlist);
   }
 
   Future<void> _getBloodRequest() async {
@@ -145,7 +147,7 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: List.generate(
                 bloodRequest.length,
-                (index) => index < widget.itemCount &&
+                (index) => index < widget.itemCount + 1 &&
                         ((userRequest == true &&
                                 bloodRequest[index].initiator?.id ==
                                     widget.userid) ||

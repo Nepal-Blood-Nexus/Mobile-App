@@ -8,7 +8,7 @@ class BloodRequest {
   final String? location;
   final String? gender;
   final String? cordinates;
-  final String? rdate;
+  final String? udate;
   final String? cdate;
 
   BloodRequest({
@@ -19,7 +19,7 @@ class BloodRequest {
     this.location,
     this.gender,
     this.cordinates,
-    this.rdate,
+    this.udate,
     this.cdate,
   });
 
@@ -32,8 +32,8 @@ class BloodRequest {
       location: parsedJson['location'].toString(),
       gender: parsedJson['gender'].toString(),
       cordinates: parsedJson['cordinates'].toString(),
-      rdate: parsedJson['createdAt'].toString(),
-      cdate: parsedJson['updatedAt'].toString(),
+      cdate: parsedJson['createdAt'].toString(),
+      udate: parsedJson['updatedAt'].toString(),
     );
   }
 }

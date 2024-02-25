@@ -16,7 +16,39 @@ Future initiateChatwithRequest(requestId) async {
     if (res.statusCode == 200) {
       var response = jsonDecode(res.body);
       debugPrint("initialize chat");
-      return response["chat"][0];
+      return response["chat"];
+    }
+  } else {
+    debugPrint("Error in chat");
+  }
+}
+
+Future GetChats() async {
+  String? token = await storage.read(key: "token");
+  if (token != "") {
+    var url = Uri.https('nbn-server.onrender.com', 'api/chat/getmychats');
+    var res = await http.get(url, headers: {"authorization": "Bearer $token"});
+    if (res.statusCode == 200) {
+      var response = jsonDecode(res.body);
+      debugPrint("get chats");
+      return response["chats"];
+    }
+  } else {
+    debugPrint("Error in chat");
+  }
+}
+
+Future sendMsg(msg, chatid) async {
+  String? token = await storage.read(key: "token");
+  if (token != "") {
+    var url = Uri.https('nbn-server.onrender.com', 'api/chat/send');
+    var res = await http.post(url,
+        body: {"msg": msg, "chatid": chatid},
+        headers: {"authorization": "Bearer $token"});
+    if (res.statusCode == 200) {
+      // var response = jsonDecode(res.body);
+      debugPrint(res.body.toString());
+      return res.body;
     }
   } else {
     debugPrint("Error in chat");

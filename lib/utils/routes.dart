@@ -3,6 +3,7 @@ import 'package:nepal_blood_nexus/auth/login/pages/login.dart';
 import 'package:nepal_blood_nexus/auth/register/pages/register.dart';
 import 'package:nepal_blood_nexus/bloodrequest/bloodrequest.dart';
 import 'package:nepal_blood_nexus/bloodrequest/donateblood.dart';
+import 'package:nepal_blood_nexus/chat/all_chats_screen.dart';
 import 'package:nepal_blood_nexus/chat/chat_screen.dart';
 import 'package:nepal_blood_nexus/homepage/pages/homepage.dart';
 import 'package:nepal_blood_nexus/homepage/screens/setup.dart';
@@ -23,6 +24,7 @@ class Routes {
   static const String donateblood = 'donateblood';
   static const String dev = 'dev';
   static const String chat = 'chat';
+  static const String allchats = 'allchats';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -85,10 +87,16 @@ class Routes {
       case more:
         return MaterialPageRoute(builder: (context) => const MoreOptionPage());
 
+      case allchats:
+        return PageTransition(
+            child: const AllChatsScreen(),
+            type: PageTransitionType.fade,
+            duration: const Duration(milliseconds: 500));
+
       case chat:
-        final ChatData chatData = settings.arguments as ChatData;
+        final String rid = settings.arguments as String;
         return MaterialPageRoute(
-            builder: (context) => ChatScreen(chatData: chatData));
+            builder: (context) => ChatScreen(requestid: rid));
 
       case dev:
         return MaterialPageRoute(

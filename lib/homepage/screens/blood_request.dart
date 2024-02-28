@@ -64,12 +64,12 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
     _getBloodRequest();
   }
 
-  @override
-  void dispose() {
-    loading;
-    bloodRequest;
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   loading;
+  //   bloodRequest;
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {

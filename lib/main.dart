@@ -119,11 +119,13 @@ class _MyAppState extends State<MyApp> {
     try {
       String? storedToken = await storage.read(key: 'token');
       String? userString = await storage.read(key: 'user');
-      User user = User.fromJson(jsonDecode(userString as String));
-      setState(() {
-        token = storedToken!;
-        user = user;
-      });
+      if (userString != null) {
+        User user = User.fromJson(jsonDecode(userString));
+        setState(() {
+          token = storedToken!;
+          user = user;
+        });
+      }
       await messaging.requestPermission(
         alert: true,
         announcement: false,
@@ -187,6 +189,10 @@ class _MyAppState extends State<MyApp> {
           print(e);
         });
       } else {
+        print("token not found");
+        setState(() {
+          loading = false;
+        });
         // Handle the case when the token is not found.
       }
     } catch (e) {

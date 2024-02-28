@@ -60,13 +60,15 @@ class _ChatScreenState extends State<ChatScreen> {
       var message = jsonDecode(event.data);
       print(message);
       setState(() {
-        messages.add(
-          ChatMessage(
-              content: message["content"],
-              author: message["author"],
-              type: message["type"],
-              status: "sent"),
-        );
+        if (message["author"] != user.id) {
+          messages.add(
+            ChatMessage(
+                content: message["content"],
+                author: message["author"],
+                type: message["type"],
+                status: "sent"),
+          );
+        }
       });
     } catch (e) {
       print(e);
@@ -93,7 +95,7 @@ class _ChatScreenState extends State<ChatScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                chatData.requestId ?? "hhh",
+                chatData.requestId?.id ?? "hhh",
                 style: TextStyle(fontSize: 11),
               ),
               Text(chatData.recipentName ?? "Sring"),
@@ -147,6 +149,33 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ],
               ),
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(border: Border.all(width: 1)),
+            padding: EdgeInsets.only(left: 7, right: 7, top: 10, bottom: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(chatData.requestId?.bloodGroup ?? ""),
+                    Text(
+                      chatData.requestId?.location ?? "",
+                      style: TextStyle(fontSize: 11),
+                    ),
+                  ],
+                ),
+                Text(
+                  chatData.requestId?.status ?? "",
+                  style: TextStyle(
+                    color: Colours.mainColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                )
+              ],
             ),
           ),
           Expanded(

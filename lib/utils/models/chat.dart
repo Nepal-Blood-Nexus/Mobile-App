@@ -1,3 +1,5 @@
+import 'package:nepal_blood_nexus/utils/models/request.dart';
+
 class ChatMessage {
   String? id;
   final String content;
@@ -30,7 +32,7 @@ class ChatMessage {
 class ChatData {
   final String? id;
   final List<ChatMessage>? messages;
-  final String? requestId;
+  final BloodRequest? requestId;
   final String? recipentName;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -52,7 +54,7 @@ class ChatData {
     return ChatData(
       id: json['_id'],
       messages: msg,
-      requestId: json['requestid'],
+      requestId: BloodRequest.fromJson(json['requestid']),
       recipentName: json['recipentName'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
@@ -68,6 +70,7 @@ class ChatList {
   });
 
   factory ChatList.fromJson(List<dynamic> json) {
+    print(json);
     List<ChatData> chats = json.map((data) => ChatData.fromJson(data)).toList();
     return ChatList(chats: chats);
   }

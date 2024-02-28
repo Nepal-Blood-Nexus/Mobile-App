@@ -273,8 +273,8 @@ class _HomePageState extends State<HomePage> {
                     child: user.id != null
                         ? BloodRequestScreen(
                             token: token,
-                            itemCount: 1,
-                            userid: user.id!,
+                            itemCount: 5,
+                            userid: user.id as String,
                           )
                         : const Row(),
                   ),
@@ -418,8 +418,6 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         IconButton(
                           onPressed: () {
-                            // storage.delete(key: "token");
-                            // storage.delete(key: "user");
                             Navigator.pushNamed(context, Routes.allchats);
                           },
                           icon: const Icon(

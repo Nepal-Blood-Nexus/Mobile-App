@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nepal_blood_nexus/utils/colours.dart';
-import 'package:lottie/lottie.dart';
 
 class Loading extends StatelessWidget {
   const Loading({super.key});
@@ -9,7 +8,7 @@ class Loading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colours.white,
-      child: Center(
+      child: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -23,7 +22,7 @@ class Loading extends StatelessWidget {
             //     fit: BoxFit.fill,
             //   ),
             // ),
-            const Text(
+            Text(
               "Connecting To server",
               style: TextStyle(fontSize: 11, decoration: TextDecoration.none),
             )

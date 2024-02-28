@@ -74,7 +74,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           width: 350,
-          child: (widget.user.profile == null)
+          child: (widget.user.profile == null ||
+                  widget.user.profile?.length == 0)
               ? ButtonV1(
                   onTap: () {
                     Navigator.pushNamed(

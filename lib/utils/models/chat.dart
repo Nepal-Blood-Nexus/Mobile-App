@@ -70,7 +70,7 @@ class ChatList {
   });
 
   factory ChatList.fromJson(List<dynamic> json) {
-    print(json);
+    // print(json);
     List<ChatData> chats = json.map((data) => ChatData.fromJson(data)).toList();
     return ChatList(chats: chats);
   }

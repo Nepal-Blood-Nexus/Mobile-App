@@ -11,15 +11,15 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 const storage = FlutterSecureStorage();
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key, required this.requestid});
-  final String requestid;
+class ChatScreenOld extends StatefulWidget {
+  const ChatScreenOld({super.key, required this.chatid});
+  final String chatid;
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<ChatScreenOld> createState() => _ChatScreenOldState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenOldState extends State<ChatScreenOld> {
   late List<ChatMessage> messages;
   late ChatData chatData;
   late User user;
@@ -34,7 +34,7 @@ class _ChatScreenState extends State<ChatScreen> {
     setState(() {
       user = User.fromJson(jsonDecode(userString!));
     });
-    await initiateChatwithRequest(widget.requestid).then((value) => {
+    await getChat(widget.chatid).then((value) => {
           setState(() {
             chatData = ChatData.fromJson(value);
             messages = ChatData.fromJson(value).messages!;

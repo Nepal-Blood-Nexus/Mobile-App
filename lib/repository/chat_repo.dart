@@ -54,3 +54,18 @@ Future sendMsg(msg, chatid) async {
     debugPrint("Error in chat");
   }
 }
+
+Future getChat(chatid) async {
+  String? token = await storage.read(key: "token");
+  if (token != "") {
+    var url = Uri.https('nbn-server.onrender.com', 'api/chat/get/$chatid');
+    var res = await http.get(url, headers: {"authorization": "Bearer $token"});
+    if (res.statusCode == 200) {
+      var response = jsonDecode(res.body);
+      print(response);
+      return response["chats"];
+    }
+  } else {
+    debugPrint("Error in chat");
+  }
+}

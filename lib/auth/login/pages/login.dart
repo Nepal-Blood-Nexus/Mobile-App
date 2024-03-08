@@ -9,8 +9,20 @@ import 'package:nepal_blood_nexus/widgets/text_input.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final fullnameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  final storage = const FlutterSecureStorage();
 
   void displayDialog(context, title, text) => showDialog(
         context: context,
@@ -43,13 +55,6 @@ class LoginPage extends StatelessWidget {
         ),
       );
 
-  final fullnameController = TextEditingController();
-  final emailController = TextEditingController();
-  final phoneController = TextEditingController();
-  final passwordController = TextEditingController();
-
-  final storage = const FlutterSecureStorage();
-
   Future attemptSignUp(
     String email,
     String phone,
@@ -73,6 +78,15 @@ class LoginPage extends StatelessWidget {
         debugPrint(e.toString());
       }
     }
+  }
+
+  late bool hide;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    hide = true;
   }
 
   @override
@@ -105,15 +119,6 @@ class LoginPage extends StatelessWidget {
                   style: TextStyle(
                       fontWeight: FontWeight.w600, letterSpacing: 1.5),
                 ),
-
-                const SizedBox(
-                  height: 10,
-                ),
-                // CustomTextInput(
-                //   hintText: "email",
-                //   controller: emailController,
-                //   textInputType: TextInputType.emailAddress,
-                // ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -127,10 +132,22 @@ class LoginPage extends StatelessWidget {
                 ),
                 CustomTextInput(
                   hintText: "password",
-                  obsureText: true,
+                  obsureText: hide,
                   controller: passwordController,
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        hide = !hide;
+                      });
+                    },
+                    child: Icon(
+                      hide
+                          ? Icons.remove_red_eye_rounded
+                          : Icons.remove_red_eye_outlined,
+                      color: Colours.mainColor,
+                    ),
+                  ),
                 ),
-
                 ButtonV1(
                   text: "Login",
                   onTap: () {
@@ -157,7 +174,6 @@ class LoginPage extends StatelessWidget {
                     });
                   },
                 ),
-
                 const Text("Dont Have an account?"),
                 TextButton(
                     onPressed: () {
@@ -167,7 +183,6 @@ class LoginPage extends StatelessWidget {
                       "Register",
                       style: TextStyle(color: Colours.mainColor),
                     )),
-
                 // google login
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25),
@@ -195,7 +210,6 @@ class LoginPage extends StatelessWidget {
                     height: 30,
                   ),
                 ),
-
                 //already member login now
               ],
             ),

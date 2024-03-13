@@ -434,7 +434,7 @@ class _HomePageState extends State<HomePage> {
                             Navigator.pushNamed(context, Routes.more);
                           },
                           icon: const Icon(
-                            Icons.read_more,
+                            Icons.person_4_outlined,
                             size: 30,
                           ),
                           tooltip: "More",

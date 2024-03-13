@@ -63,7 +63,7 @@ Future getChat(chatid) async {
     if (res.statusCode == 200) {
       var response = jsonDecode(res.body);
       print(response);
-      return response["chats"];
+      return response["chat"];
     }
   } else {
     debugPrint("Error in chat");

@@ -60,7 +60,7 @@ class _ChatScreenOldState extends State<ChatScreenOld> {
       var message = jsonDecode(event.data);
 
       setState(() {
-        if (message["author"] != user.id) {
+        if (message["chatid"] == chatData.id && message["author"] != user.id) {
           messages.add(
             ChatMessage(
                 content: message["content"],
@@ -294,11 +294,10 @@ class ChatBubble extends StatelessWidget {
         children: [
           (!isMe && showAvatar)
               ? CircleAvatar(
-                  child: Text(
-                      "${avatar.split(" ").first[0]}${avatar.split(" ").last[0]}"),
+                  child: Icon(Icons.face_5_rounded),
                 )
               : const SizedBox(
-                  width: 30,
+                  width: 40,
                 ),
           Align(
             alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
@@ -319,11 +318,10 @@ class ChatBubble extends StatelessWidget {
           ),
           (isMe && showAvatar)
               ? const CircleAvatar(
-                  radius: 15,
-                  child: Text("SM"),
+                  child: Icon(Icons.face_5_rounded),
                 )
               : const SizedBox(
-                  width: 30,
+                  width: 40,
                 ),
         ],
       );

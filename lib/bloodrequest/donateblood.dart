@@ -1,4 +1,3 @@
-import 'package:animated_icon/animated_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
@@ -112,9 +111,10 @@ class _DonateScreenState extends State<DonateScreen> {
             style: LocationMarkerStyle(
               markerDirection: MarkerDirection.top,
               markerSize: const Size.square(30),
-              accuracyCircleColor: Color.fromARGB(255, 237, 211, 214),
-              headingSectorColor: Color.fromARGB(255, 222, 193, 196),
+              accuracyCircleColor: const Color.fromARGB(255, 237, 211, 214),
+              headingSectorColor: const Color.fromARGB(255, 222, 193, 196),
               marker: Container(
+                padding: const EdgeInsets.all(2),
                 child: CircleAvatar(
                   child: Text(widget.bloodRequest.initiator!.fullname![0]),
                 ),

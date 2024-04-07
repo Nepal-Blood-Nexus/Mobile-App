@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage> {
             }
           });
         }).catchError((e) {
-          print(e);
+          // print(e);
         });
       } else {
         // Handle the case when the token is not found.
@@ -200,9 +200,246 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     late List<Widget> widgetOptions = <Widget>[
-      const Text(
-        'Insights Screen',
-        style: optionStyle,
+      Container(
+        padding: const EdgeInsets.all(8),
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      "Blood Pressure",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                    ),
+                    Text(
+                      "90/120 mmHg",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400, fontSize: 11.5),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "normal",
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 52, 222, 10),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 11,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 3,
+                        ),
+                        Icon(
+                          Icons.check_circle,
+                          color: Color.fromARGB(255, 52, 222, 10),
+                          size: 11,
+                        )
+                      ],
+                    )
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      "RBC Count",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                    ),
+                    Text(
+                      "90/120 mmHg",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400, fontSize: 11.5),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "Low",
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 215, 222, 10),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 11,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 3,
+                        ),
+                        Icon(
+                          Icons.warning,
+                          color: Color.fromARGB(255, 215, 222, 10),
+                          size: 11,
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      "WBC Count",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                    ),
+                    Text(
+                      "90/120 mmHg",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400, fontSize: 11.5),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "High",
+                          style: TextStyle(
+                            color: Colours.mainColor,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 11,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 3,
+                        ),
+                        Icon(
+                          Icons.error_outlined,
+                          color: Colours.mainColor,
+                          size: 11,
+                        )
+                      ],
+                    )
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      "Blood Pressure",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                    ),
+                    Text(
+                      "90/120 mmHg",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400, fontSize: 11.5),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "normal",
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 52, 222, 10),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 11,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 3,
+                        ),
+                        Icon(
+                          Icons.check_circle,
+                          color: Color.fromARGB(255, 52, 222, 10),
+                          size: 11,
+                        )
+                      ],
+                    )
+                  ],
+                )
+              ],
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Blood Pressure",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                    ),
+                    Text(
+                      "90/120 mmHg",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400, fontSize: 11.5),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "normal",
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 52, 222, 10),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 11,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 3,
+                        ),
+                        Icon(
+                          Icons.check_circle,
+                          color: Color.fromARGB(255, 52, 222, 10),
+                          size: 11,
+                        )
+                      ],
+                    )
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      "Blood Pressure",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                    ),
+                    Text(
+                      "90/120 mmHg",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400, fontSize: 11.5),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "normal",
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 52, 222, 10),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 11,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 3,
+                        ),
+                        Icon(
+                          Icons.check_circle,
+                          color: Color.fromARGB(255, 52, 222, 10),
+                          size: 11,
+                        )
+                      ],
+                    )
+                  ],
+                )
+              ],
+            ),
+            Text("data"),
+          ],
+        ),
       ),
       const Text(
         'Notifications',

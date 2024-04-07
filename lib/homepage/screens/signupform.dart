@@ -9,6 +9,7 @@ import 'package:nepal_blood_nexus/utils/colours.dart';
 import 'package:http/http.dart' as http;
 import 'package:nepal_blood_nexus/utils/models/user.dart';
 import 'package:nepal_blood_nexus/utils/routes.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 const storage = FlutterSecureStorage();
 
@@ -60,6 +61,11 @@ class _SignupFormState extends State<SignupForm> {
     var response = jsonDecode(res.body);
     return response;
   }
+
+  var maskFormatter = MaskTextInputFormatter(
+      mask: '##-###',
+      filter: {"#": RegExp(r'[0-9]')},
+      type: MaskAutoCompletionType.lazy);
 
   @override
   Widget build(BuildContext context) {
@@ -137,6 +143,7 @@ class _SignupFormState extends State<SignupForm> {
                 ),
                 FormBuilderTextField(
                   name: 'bp',
+                  inputFormatters: [maskFormatter],
                   keyboardType: TextInputType.text,
                   decoration:
                       const InputDecoration(labelText: 'Blood Pressure 80/120'),

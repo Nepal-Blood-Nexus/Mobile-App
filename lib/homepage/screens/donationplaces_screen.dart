@@ -32,10 +32,9 @@ class _DonationPlacesState extends State<DonationPlaces> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     setPlaces();
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       setState(() {
         loading = false;
       });
@@ -53,7 +52,7 @@ class _DonationPlacesState extends State<DonationPlaces> {
                 "Nearby Donation Centers",
                 style: Theme.of(context).textTheme.titleMedium,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               ...getCards(places: _donationPlaces)
@@ -69,13 +68,13 @@ List<Widget> getCards({places}) {
       (index) => places[index].name != null
           ? Card(
               elevation: 1,
-              margin: EdgeInsets.only(bottom: 20),
+              margin: const EdgeInsets.only(bottom: 20),
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.zero),
               ),
               child: Container(
-                color: Color.fromARGB(31, 222, 217, 217),
-                padding: EdgeInsets.all(0),
+                color: const Color.fromARGB(31, 222, 217, 217),
+                padding: const EdgeInsets.all(0),
                 width: 400,
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
@@ -97,21 +96,21 @@ List<Widget> getCards({places}) {
                       places[index].image,
                       fit: BoxFit.fill,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 9,
                     ),
                     Padding(
                       padding: const EdgeInsets.all(6.0),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.location_on_outlined,
                             size: 15,
                           ),
                           Text(
                             places[index].location,
                             textAlign: TextAlign.start,
-                            style: TextStyle(color: Colors.black),
+                            style: const TextStyle(color: Colors.black),
                           ),
                         ],
                       ),

@@ -62,7 +62,7 @@ Future getChat(chatid) async {
     var res = await http.get(url, headers: {"authorization": "Bearer $token"});
     if (res.statusCode == 200) {
       var response = jsonDecode(res.body);
-      print(response);
+
       return response["chat"];
     }
   } else {

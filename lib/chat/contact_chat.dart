@@ -40,8 +40,10 @@ class _ChatContactScreenState extends State<ChatContactScreen> {
       body: _body());
 
   Widget _body() {
-    if (_permissionDenied) return Center(child: Text('Permission denied'));
-    if (_contacts == null) return Center(child: CircularProgressIndicator());
+    if (_permissionDenied)
+      return const Center(child: Text('Permission denied'));
+    if (_contacts == null)
+      return const Center(child: CircularProgressIndicator());
     return ListView.builder(
         itemCount: _contacts!.length,
         itemBuilder: (context, i) => ListTile(
@@ -57,7 +59,7 @@ class _ChatContactScreenState extends State<ChatContactScreen> {
 
 class ContactPage extends StatelessWidget {
   final Contact contact;
-  ContactPage(this.contact);
+  const ContactPage(this.contact, {super.key});
 
   @override
   Widget build(BuildContext context) => Scaffold(

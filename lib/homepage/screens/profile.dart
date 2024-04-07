@@ -211,6 +211,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ]),
                 ),
         ),
+        // widget.user.profile![0]?["rbc"] ? Text("data") : Text("data"),
         const SizedBox(
           height: 20,
         ),

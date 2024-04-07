@@ -38,7 +38,7 @@ class Routes {
       case register:
         return MaterialPageRoute(builder: (context) => RegisterPage());
       case login:
-        return MaterialPageRoute(builder: (context) => LoginPage());
+        return MaterialPageRoute(builder: (context) => const LoginPage());
       // case verification:
       //   final Map args = settings.arguments as Map;
       //   return MaterialPageRoute(

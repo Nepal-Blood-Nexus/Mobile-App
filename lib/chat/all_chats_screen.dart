@@ -86,7 +86,8 @@ class _AllChatsScreenState extends State<AllChatsScreen> {
     return Scaffold(
         appBar: AppBar(
           leading: Container(
-            child: Icon(
+            padding: const EdgeInsets.all(2),
+            child: const Icon(
               Icons.search,
               size: 30,
             ),
@@ -102,16 +103,16 @@ class _AllChatsScreenState extends State<AllChatsScreen> {
               onTap: () {
                 Navigator.pushNamed(context, Routes.chatscontact);
               },
-              child: Icon(
+              child: const Icon(
                 Icons.menu,
                 size: 30,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             )
           ],
-          title: Text("MESSAGES"),
+          title: const Text("MESSAGES"),
         ),
         body: Column(
           children: [
@@ -138,18 +139,18 @@ class _AllChatsScreenState extends State<AllChatsScreen> {
                             border: BorderDirectional(
                                 top: BorderSide(
                                     width: 0.3, color: Colors.black45))),
-                        padding:
-                            EdgeInsets.symmetric(vertical: 12, horizontal: 9),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 9),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Row(
                               children: [
-                                CircleAvatar(
+                                const CircleAvatar(
                                   child: Icon(Icons.account_circle),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 8,
                                 ),
                                 Column(
@@ -171,7 +172,7 @@ class _AllChatsScreenState extends State<AllChatsScreen> {
                                                 .textTheme
                                                 .labelSmall,
                                           )
-                                        : Text("tap to chat"),
+                                        : const Text("tap to chat"),
                                   ],
                                 ),
                               ],
@@ -186,7 +187,7 @@ class _AllChatsScreenState extends State<AllChatsScreen> {
                                       ? formatDate(
                                           chatList.chats[index].updatedAt!)
                                       : "--",
-                                  style: TextStyle(fontSize: 11),
+                                  style: const TextStyle(fontSize: 11),
                                 )
                               ],
                             )

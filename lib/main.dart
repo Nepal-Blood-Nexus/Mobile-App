@@ -186,10 +186,10 @@ class _MyAppState extends State<MyApp> {
             }
           });
         }).catchError((e) {
-          print(e);
+          // print(e);
         });
       } else {
-        print("token not found");
+        // print("token not found");
         setState(() {
           loading = false;
         });

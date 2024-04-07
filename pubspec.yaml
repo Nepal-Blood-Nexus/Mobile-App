@@ -66,6 +66,7 @@ dependencies:
   card_swiper: ^3.0.1
   pusher_channels_flutter: ^2.2.1
   flutter_contacts: ^1.1.7+1
+  mask_text_input_formatter: ^2.9.0
 
 flutter_native_splash:
   color: "#DE0A1E"

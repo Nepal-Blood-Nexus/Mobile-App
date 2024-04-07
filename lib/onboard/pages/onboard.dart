@@ -17,6 +17,7 @@ class _OnboardPageState extends State<OnboardPage> {
   final onboardingPagesList = [
     PageModel(
       widget: Container(
+        padding: const EdgeInsets.all(2),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -66,6 +67,7 @@ class _OnboardPageState extends State<OnboardPage> {
     ),
     PageModel(
       widget: Container(
+        padding: const EdgeInsets.all(2),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -116,6 +118,7 @@ class _OnboardPageState extends State<OnboardPage> {
     ),
     PageModel(
       widget: Container(
+        padding: const EdgeInsets.all(2),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
